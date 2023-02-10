@@ -1,0 +1,1 @@
+web: gunicorn ratbotwebsite.wsgi --log-file -
