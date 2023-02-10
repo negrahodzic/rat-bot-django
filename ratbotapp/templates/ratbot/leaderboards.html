@@ -1,0 +1,56 @@
+{% extends 'ratbot/base/base.html' %}
+
+{% load static %}
+
+{% block body %}
+<div class="container">
+    <br>
+    <div class="row">
+        <div class="col-6">
+            Search:
+        </div>
+        <div class="col-6">
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-6">
+            Sort by:
+        </div>
+        <div class="col-6">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-primary">Server</button>
+                <button type="button" class="btn btn-primary">Scrim name</button>
+                <button type="button" class="btn btn-primary">Date played</button>
+            </div>
+        </div>
+    </div>
+    <br>
+    <table class="table table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Server name</th>
+            <th scope="col">Scrim name</th>
+            <th scope="col">Scrim type</th>
+            <th scope="col">Date played</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for result in results %}
+        <tr>
+            <th scope="row">{{ result.pk }}</th>
+            <td><a href="{% url 'result' result.pk %}">{{ result.server_name }}</a></td>
+            <td>{{ result.scrim_name }}</td>
+            <td>{{ result.get_scrim_type.label }}</td>
+            <td>{{ result.date_played }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

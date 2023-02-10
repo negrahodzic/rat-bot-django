@@ -1,0 +1,16 @@
+{% extends 'ratbot/base/base.html' %}
+
+{% load static %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <p>Results for chosen scrim are:</p>
+        {% for result in results %}
+        <li>
+            #{{ result.rank }} {{ result.team_name }} - {{ result.tp }} points
+        </li>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

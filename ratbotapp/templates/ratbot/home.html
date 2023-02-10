@@ -1,0 +1,96 @@
+{% extends 'ratbot/base/base.html' %}
+
+{% load static %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-4 mt-3">
+
+        </div>
+        <div class="col-4 mt-3">
+            <!--            <img src="{ static 'ratbot/images/ratbot-right.png' %}" alt="Rat Bot" width="100%">-->
+            <video width="100%" autoplay loop muted>
+                <source src="{% static 'ratbot/videos/rabbit-sleep.mp4' %}"
+                        type="video/mp4">
+            </video>
+        </div>
+
+        <div class="col-4 mt-3">
+
+        </div>
+    </div>
+    <div class="row bg-dark mt-3 text-center">
+        <div class="text-light">
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+            industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
+            scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into
+            electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of
+            Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like
+            Aldus PageMaker including versions of Lorem Ipsum.
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-8 bg-dark p-3 mt-3 text-light">
+            Test <br>{{ test }}
+        </div>
+        <div class="col-4">
+            <img src="{% static 'ratbot/images/ratbot-correct.png' %}" alt="Rat Bot" width="100%">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <img src="{% static 'ratbot/images/ratbot-incorrect.png' %}" alt="Rat Bot" width="100%">
+        </div>
+        <div class="col-8 bg-dark p-3 mt-3 text-light">
+            Test <br>{{ test }}
+        </div>
+    </div>
+    <div class="top-3-reviews mt-3 text-center">
+        TOP 3 <br>
+        Nothing would be possible without early supporters!
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
+        <div class="col">
+            <div class="card">
+                <img src="{% static 'ratbot/images/syn-logo.png' %}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">SEMA | Syn Scrims</h5>
+                    <p class="card-text">Rat bot is great because it really makes Scrim making procedure so much easier.
+                        Most of the work is done by bot, so basically all we need to do is just keep an eye in case
+                        someone does not fill the registration properly or something similiar. Also what is great is
+                        that you will have full time support in case you need help with a bot.</p>
+                    <p class="card-text"><small class="text-muted">Owners Kimy & Sema</small></p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <img src="{% static 'ratbot/images/illegaly_logo.png' %}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">ILLEGALLY ESPORTS</h5>
+                    <p class="card-text">Rat bot is great because it really makes Scrim making procedure so much easier.
+                        Most of the work is done by bot, so basically all we need to do is just keep an eye in case
+                        someone does not fill the registration properly or something similiar. Also what is great is
+                        that you will have full time support in case you need help with a bot.</p>
+                    <p class="card-text"><small class="text-muted">Owner Lara</small></p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <img src="{% static 'ratbot/images/ratbot-incorrect.png' %}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">God Of Lions</h5>
+                    <p class="card-text">Rat bot is great because it really makes Scrim making procedure so much easier.
+                        Most of the work is done by bot, so basically all we need to do is just keep an eye in case
+                        someone does not fill the registration properly or something similiar. Also what is great is
+                        that you will have full time support in case you need help with a bot.</p>
+                    <p class="card-text"><small class="text-muted">Owner Elli</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
