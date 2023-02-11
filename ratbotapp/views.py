@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpRequest, JsonResponse
 import requests
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
 
 from .models import Result
 
@@ -19,7 +19,8 @@ def index(request):
 
 auth_url_discord = "https://discord.com/api/oauth2/authorize?client_id=1039941503423889548&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Fapi%2Foauth2%2Flogin%2Fredirect&response_type=code&scope=identify"
 
-@csrf_protect
+# @csrf_protect
+@csrf_exempt
 @login_required(login_url="/api/oauth2/login")
 def get_authenticated_user(request: HttpRequest):
     print("======== STARTED get_authenticated_user() =======")
@@ -34,12 +35,14 @@ def oauth2(request: HttpRequest) -> JsonResponse:
     print("======== STARTED oauth2() =======")
     return JsonResponse({"msg": "Hello msg json!"})
 
-@csrf_protect
+# @csrf_protect
+@csrf_exempt
 def discord_login(request: HttpRequest):
     print("======== STARTED discord_login() =======")
     return redirect(auth_url_discord)
 
-@csrf_protect
+# @csrf_protect
+@csrf_exempt
 def discord_login_redirect(request: HttpRequest):
     print("======== STARTED discord_login_redirect() =======")
     code = request.GET.get('code')
@@ -86,14 +89,17 @@ def exchange_token(code: str, csrf_token: str):
     pprint(user)
     return user
 
-@csrf_protect
+# @csrf_protect
+@csrf_exempt
 def login_btn(request: HttpRequest):
     print("======== STARTED login_btn() =======")
     # return redirect("/api/oauth2/login")
     return redirect("/accounts/discord/login")
 
-@csrf_protect
+# @csrf_protect
+@csrf_exempt
 @login_required(login_url="/accounts/discord/login")
+# @login_required(login_url="/accounts/login")
 def leaderboards_page(request):
     print("======== STARTED leaderboards_page() =======")
     results = Result.objects.all()

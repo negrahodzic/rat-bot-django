@@ -25,7 +25,9 @@ SECRET_KEY = 'django-insecure-%-9c(thmw8+-eez=l)z9hp3#_njdhj#s$fm)o4gnzfa14xykbg
 DEBUG = True
 ALLOWED_HOSTS = [
     # "*",
-    'rat-bot.up.railway.app']
+    'rat-bot.up.railway.app',
+    '127.0.0.1'
+]
 
 AUTHENTICATION_BACKENDS = [
     # 'ratbotapp.auth.DiscordAuthenticationBackend',
@@ -52,6 +54,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -59,7 +62,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -81,6 +83,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.csrf',
             ],
         },
     },
