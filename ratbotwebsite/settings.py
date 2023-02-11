@@ -26,7 +26,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     # "*",
     'rat-bot.up.railway.app',
-    # '127.0.0.1'
+    '127.0.0.1'
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -161,6 +161,7 @@ SOCIALACCOUNT_PROVIDERS = {
         "client_secret": "YvjOBw2O3jsmfeA5JfiMfSaeJguA03rW",
         "grant_type": "authorization_code",
         "code": '',
-        "redirect_uri": os.path.join(BASE_DIR, "/api/oauth2/login/redirect")
+        "redirect_uri": str(BASE_DIR) + "/api/oauth2/login/redirect"
     }
 }
+
