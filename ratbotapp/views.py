@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 
+from ratbotwebsite.settings import BASE_DIR
 from .models import Result
 
 # Create your views here.
@@ -69,7 +70,7 @@ def exchange_token(code: str, csrf_token: str):
         "client_secret": "YvjOBw2O3jsmfeA5JfiMfSaeJguA03rW",
         "grant_type": "authorization_code",
         "code": code,
-        "redirect_uri": "http://127.0.0.1:8000/api/oauth2/login/redirect"
+        "redirect_uri": str(BASE_DIR) + "/api/oauth2/login/redirect"
     }
 
     headers = {
