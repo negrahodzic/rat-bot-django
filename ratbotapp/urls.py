@@ -1,7 +1,11 @@
+from pprint import pprint
+
 import allauth.account.views
 from django.urls import path
 
+from ratbotwebsite import settings
 from . import views
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     path('', views.index, name='home'),
@@ -16,3 +20,7 @@ urlpatterns = [
     path('login', views.login_btn, name='login'),
     path('test', views.test, name='test')
 ]
+
+if settings.DEBUG:
+    urlpatterns += staticfiles_urlpatterns()
+pprint(urlpatterns)
