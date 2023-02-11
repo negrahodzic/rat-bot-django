@@ -165,3 +165,5 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+print(str(BASE_DIR) + "/api/oauth2/login/redirect")
+

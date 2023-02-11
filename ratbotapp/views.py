@@ -18,7 +18,8 @@ def index(request):
     })
 
 
-auth_url_discord = "https://discord.com/api/oauth2/authorize?client_id=1039941503423889548&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Fapi%2Foauth2%2Flogin%2Fredirect&response_type=code&scope=identify"
+# auth_url_discord = "https://discord.com/api/oauth2/authorize?client_id=1039941503423889548&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Fapi%2Foauth2%2Flogin%2Fredirect&response_type=code&scope=identify"
+auth_url_discord = "https://discord.com/api/oauth2/authorize?client_id=1039941503423889548&redirect_uri=https%3A%2F%2Frat-bot.up.railway.app%2Fapi%2Foauth2%2Flogin%2Fredirect&response_type=code&scope=identify"
 
 # @csrf_protect
 @csrf_exempt
@@ -73,6 +74,8 @@ def exchange_token(code: str, csrf_token: str):
         "redirect_uri": str(BASE_DIR) + "/api/oauth2/login/redirect"
     }
 
+    print(str(BASE_DIR) + "/api/oauth2/login/redirect")
+
     headers = {
         "Content-Type": "application/x-www-form-urlencoded",
         "X-CSRFToken": csrf_token
@@ -103,6 +106,7 @@ def login_btn(request: HttpRequest):
 # @login_required(login_url="/accounts/login")
 def leaderboards_page(request):
     print("======== STARTED leaderboards_page() =======")
+    print(str(BASE_DIR) + "/api/oauth2/login/redirect")
     results = Result.objects.all()
     return render(request, 'ratbot/leaderboards.html', {
         'results': results
