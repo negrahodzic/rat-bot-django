@@ -44,16 +44,22 @@ def discord_login_redirect(request: HttpRequest):
     print("======== STARTED discord_login_redirect() =======")
     code = request.GET.get('code')
     pprint(code)
-    user = exchange_token(code)
+    csrf_token = request.COOKIES.get('csrftoken')
+    user = exchange_token(code, csrf_token)
     pprint(user)
     discord_user = authenticate(request, user=user)
     pprint(discord_user)
     discord_user = list(discord_user).pop()
     login(request, discord_user)
-    return redirect("/api/oauth2/user")
+
+    headers = {
+        "X-CSRFToken": csrf_token
+    }
+    return redirect("/api/oauth2/user", headers=headers)
+    # return redirect("/api/oauth2/user")
 
 
-def exchange_token(code: str):
+def exchange_token(code: str, csrf_token: str):
     print("======== STARTED exchange_token() =======")
     data = {
         "client_id": "1039941503423889548",
@@ -65,6 +71,7 @@ def exchange_token(code: str):
 
     headers = {
         "Content-Type": "application/x-www-form-urlencoded",
+        "X-CSRFToken": csrf_token
     }
 
     response = requests.post("https://discord.com/api/oauth2/token", data=data, headers=headers)
@@ -72,7 +79,8 @@ def exchange_token(code: str):
     print(credentials)
     access_token = credentials['access_token']
     response = requests.get("https://discord.com/api/v6/users/@me", headers={
-        "Authorization": 'Bearer %s' % access_token
+        "Authorization": 'Bearer %s' % access_token,
+        "X-CSRFToken": csrf_token
     })
     user = response.json()
     pprint(user)
