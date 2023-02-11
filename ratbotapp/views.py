@@ -1,5 +1,5 @@
 from pprint import pprint
-
+import os.path
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpRequest, JsonResponse
 import requests
@@ -14,6 +14,11 @@ def index(request):
     return render(request, 'ratbot/home.html', {
         'test': "Testing"
     })
+def test(request):
+    test = f'This is the current path: [{ os.getcwd() }]<br>' \
+           f'This is the static path: [{os.path.join(os.getcwd(), "staticfiles", "ratbot", "images", "logo.png") }]<br>' \
+           f'C:\\Users\\Negra\\PycharmProjects\\rat-bot-website\\ratbot\\staticfiles\\ratbot\\images\\logo.png'
+    return HttpResponse(test)
 
 
 auth_url_discord = "https://discord.com/api/oauth2/authorize?client_id=1039941503423889548&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Fapi%2Foauth2%2Flogin%2Fredirect&response_type=code&scope=identify"

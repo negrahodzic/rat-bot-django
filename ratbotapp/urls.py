@@ -14,4 +14,5 @@ urlpatterns = [
     path('api/oauth2/login', views.discord_login, name='oauth2_login'),
     path('api/oauth2/login/redirect', views.discord_login_redirect, name='discord_login_redirect'),
     path('login', views.login_btn, name='login'),
+    path('test', views.test, name='test')
 ]
