@@ -26,7 +26,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     # "*",
     'rat-bot.up.railway.app',
-    '127.0.0.1'
+    # '127.0.0.1'
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -50,11 +50,11 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.discord',
-    'corsheaders',
+    # 'corsheaders',
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -64,11 +64,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = False
+# CORS_ORIGIN_ALLOW_ALL = False
 # CORS_ORIGIN_WHITELIST = [
 #     'https://rat-bot.up.railway.app',
 # ]
-SRF_TRUSTED_ORIGINS = ['https://rat-bot.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://rat-bot.up.railway.app']
 
 ROOT_URLCONF = 'ratbotwebsite.urls'
 
@@ -83,7 +83,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.csrf',
+                # 'django.template.context_processors.csrf',
             ],
         },
     },
@@ -161,6 +161,6 @@ SOCIALACCOUNT_PROVIDERS = {
         "client_secret": "YvjOBw2O3jsmfeA5JfiMfSaeJguA03rW",
         "grant_type": "authorization_code",
         "code": '',
-        "redirect_uri": "http://127.0.0.1:8000/api/oauth2/login/redirect"
+        "redirect_uri": os.path.join(BASE_DIR, "/api/oauth2/login/redirect")
     }
 }
