@@ -1,1 +1,1 @@
-web: gunicorn ratbotwebsite.wsgi --log-file -
+web: python manage.py migrate && gunicorn ratbotwebsite.wsgi --log-file -

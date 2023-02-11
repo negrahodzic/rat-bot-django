@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-%-9c(thmw8+-eez=l)z9hp3#_njdhj#s$fm)o4gnzfa14xykbg
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["*", "https://rat-bot.up.railway.app"]
 
 AUTHENTICATION_BACKENDS = [
     # 'ratbotapp.auth.DiscordAuthenticationBackend',
@@ -65,6 +65,7 @@ CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = [
     'https://rat-bot.up.railway.app',
 ]
+SRF_TRUSTED_ORIGINS = ["https://rat-bot.up.railway.app"]
 
 ROOT_URLCONF = 'ratbotwebsite.urls'
 
