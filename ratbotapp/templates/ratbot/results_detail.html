@@ -2,16 +2,40 @@
 
 {% load static %}
 
+{% block additional_cdn %}
+{% endblock %}
+
 {% block body %}
 <div class="container">
-    <div class="row">
-        <p>Details for {{result.scrim_name}} ({{result.date_played}}) scrim played at {{result.server_name}} server:</p>
-
-        {% for score in scores %}
-        <li>
-            #{{ score.rank }} {{ score.team_name }} - {{ score.tp }} points
-        </li>
-        {% endfor %}
+    <div class="row mt-3 mb-2">
+        <h3 class="text-center">Details for <u>{{result.scrim_name}} ({{result.date_played}})</u> scrim played at <b>{{result.server_name}}</b>
+            server</h3>
     </div>
+    <table id="results_detail" class="table table-striped display">
+        <thead class="table-dark">
+        <tr>
+            <th scope="col" class="dt-center">Rank</th>
+            <th scope="col" class="dt-center">Team name</th>
+            <th scope="col" class="dt-center">Total points</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for score in scores %}
+        <tr>
+            <th scope="row" class="dt-center">{{ score.rank }}</th>
+            <td class="dt-center">{{ score.team_name }}</td>
+            <td class="dt-center">{{ score.tp }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% block additional_scripts %}
+    <script>
+    $(document).ready(function() {
+        $('#results_detail').DataTable();
+    });
+    </script>
+    {% endblock %}
+
 </div>
 {% endblock %}
