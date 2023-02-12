@@ -1,6 +1,6 @@
 from pprint import pprint
 import os.path
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpRequest, JsonResponse
 import requests
 from django.contrib.auth import authenticate, login
@@ -8,7 +8,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 
 from ratbotwebsite.settings import BASE_DIR
-from .models import Result
+from .models import Result, Score
+
 
 # Create your views here.
 def index(request):
@@ -18,8 +19,10 @@ def index(request):
     })
 
 
-# auth_url_discord = "https://discord.com/api/oauth2/authorize?client_id=1039941503423889548&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Fapi%2Foauth2%2Flogin%2Fredirect&response_type=code&scope=identify"
-auth_url_discord = "https://discord.com/api/oauth2/authorize?client_id=1039941503423889548&redirect_uri=https%3A%2F%2Frat-bot.up.railway.app%2Fapi%2Foauth2%2Flogin%2Fredirect&response_type=code&scope=identify"
+auth_url_discord = "https://discord.com/api/oauth2/authorize?client_id=1039941503423889548&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Fapi%2Foauth2%2Flogin%2Fredirect&response_type=code&scope=identify"
+
+
+# auth_url_discord = "https://discord.com/api/oauth2/authorize?client_id=1039941503423889548&redirect_uri=https%3A%2F%2Frat-bot.up.railway.app%2Fapi%2Foauth2%2Flogin%2Fredirect&response_type=code&scope=identify"
 
 # @csrf_protect
 @csrf_exempt
@@ -33,15 +36,18 @@ def get_authenticated_user(request: HttpRequest):
         "discord_tag": user.discord_tag
     })
 
+
 def oauth2(request: HttpRequest) -> JsonResponse:
     print("======== STARTED oauth2() =======")
     return JsonResponse({"msg": "Hello msg json!"})
+
 
 # @csrf_protect
 @csrf_exempt
 def discord_login(request: HttpRequest):
     print("======== STARTED discord_login() =======")
     return redirect(auth_url_discord)
+
 
 # @csrf_protect
 @csrf_exempt
@@ -93,12 +99,14 @@ def exchange_token(code: str, csrf_token: str):
     pprint(user)
     return user
 
+
 # @csrf_protect
 @csrf_exempt
 def login_btn(request: HttpRequest):
     print("======== STARTED login_btn() =======")
     # return redirect("/api/oauth2/login")
     return redirect("/accounts/discord/login")
+
 
 # @csrf_protect
 @csrf_exempt
@@ -112,9 +120,13 @@ def leaderboards_page(request):
         'results': results
     })
 
-def result(request, pk):
+
+def results_detail(request, pk):
     print("======== STARTED result() =======")
-    result = Result.objects.filter(scrim=pk)
-    return render(request, 'ratbot/result.html', {
-        'result': result[0]
-    })
+    # result = Result.objects.filter(id=id)
+    result = get_object_or_404(Result, pk=pk)
+    scores = Score.objects.filter(result_id=result.id).order_by('rank')
+    context = {'result': result, 'scores': scores}
+    pprint(result)
+    pprint(scores)
+    return render(request, 'ratbot/results_detail.html', context)

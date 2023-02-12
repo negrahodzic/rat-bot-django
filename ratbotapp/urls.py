@@ -10,7 +10,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 urlpatterns = [
     path('', views.index, name='home'),
     path('leaderboards/', views.leaderboards_page, name='leaderboards'),
-    path('result/<int:pk>/', views.result, name='result'),
+    path('results/<int:pk>/', views.results_detail, name='results_detail'),
     path('account/logout', allauth.account.views.logout, name='logout'),
     path('account/login', allauth.account.views.login, name='login'),
     path('oauth2', views.oauth2, name='oauth2'),

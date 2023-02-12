@@ -44,7 +44,7 @@
         {% for result in results %}
         <tr>
             <th scope="row">{{ result.pk }}</th>
-            <td><a href="{% url 'result' result.pk %}">{{ result.server_name }}</a></td>
+            <td><a href="{% url 'results_detail' result.pk %}">{{ result.server_name }}</a></td>
             <td>{{ result.scrim_name }}</td>
             <td>{{ result.get_scrim_type.label }}</td>
             <td>{{ result.date_played }}</td>
