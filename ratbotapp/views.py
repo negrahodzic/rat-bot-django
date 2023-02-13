@@ -1,5 +1,7 @@
 from pprint import pprint
 import os.path
+
+from django.db.models import Sum, Max, F
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpRequest, JsonResponse
 import requests
@@ -130,3 +132,43 @@ def results_detail(request, pk):
     pprint(result)
     pprint(scores)
     return render(request, 'ratbot/results_detail.html', context)
+
+
+@login_required(login_url="/accounts/discord/login")
+def statistics_page(request):
+    print("======== STARTED statistics_page() =======")
+    # results = Result.objects.all()
+    #
+    # top_scores = Score.objects.values("result_id").annotate(
+    #     max_tp=Max("tp")
+    # ).order_by("-max_tp")[:3]
+    #
+    # top_results = Result.objects.filter(id__in=[score["result_id"] for score in top_scores])
+
+    # top_scores = Score.objects.values("result_id__server_name").annotate(
+    #     max_tp=Max("tp")
+    # ).order_by("-max_tp")
+    #
+    # top_results = []
+    # for score in top_scores:
+    #     result = Result.objects.filter(server_name=score["result_id__server_name"],
+    #                                    date_played=score["result_id__date_played"]).first()
+    #     score_object = Score.objects.filter(result=result, tp=score["max_tp"]).first()
+    #     top_results.append({"result": result, "score": score_object})
+    #
+    # top_stats = top_results
+
+    top_stats = Score.objects.filter(tp__gte=0).order_by('-tp').select_related('result_id')[:3]
+
+    context = {
+        'statistics': {
+            # 'top_results': top_results,
+            # 'top_scores': top_scores,
+            'top_stats': top_stats
+        }
+    }
+
+    pprint(context)
+    pprint(top_stats[0].result_id.server_name)
+
+    return render(request, 'ratbot/statistics.html', context)

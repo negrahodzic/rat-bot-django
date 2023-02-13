@@ -23,7 +23,7 @@
         {% for score in scores %}
         <tr>
             <th scope="row" class="dt-center">{{ score.rank }}</th>
-            <td class="dt-center">{{ score.team_name }}</td>
+            <td class="dt-center">{{ score.team_id.team_name }}</td>
             <td class="dt-center">{{ score.tp }}</td>
         </tr>
         {% endfor %}
