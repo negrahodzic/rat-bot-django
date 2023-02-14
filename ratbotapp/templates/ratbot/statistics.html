@@ -24,8 +24,8 @@
         <tbody>
         {% for score in statistics.top_stats %}
         <tr>
-            <td>{{ score.result_id.server_name }}</td>
-            <td>{{ score.team_id.team_name }}</td>
+            <td>{{ score.result.server.guild_name }}</td>
+            <td>{{ score.team.team_name }}</td>
             <td>{{ score.tp }}</td>
         </tr>
         {% endfor %}

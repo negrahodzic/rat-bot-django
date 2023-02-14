@@ -30,7 +30,6 @@ ALLOWED_HOSTS = [
 ]
 
 AUTHENTICATION_BACKENDS = [
-    # 'ratbotapp.auth.DiscordAuthenticationBackend',
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend'
 ]
@@ -50,11 +49,10 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.discord',
-    # 'corsheaders',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
-    # 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -64,10 +62,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# CORS_ORIGIN_ALLOW_ALL = False
-# CORS_ORIGIN_WHITELIST = [
-#     'https://rat-bot.up.railway.app',
-# ]
 CSRF_TRUSTED_ORIGINS = ['https://rat-bot.up.railway.app']
 
 ROOT_URLCONF = 'ratbotwebsite.urls'
@@ -83,7 +77,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                # 'django.template.context_processors.csrf',
             ],
         },
     },
@@ -136,15 +129,13 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-print("======= STATIC_ROOT ==========")
-print(STATIC_ROOT)
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "ratbotapp", "static")
 ]
 
-print("======= STATIC_ROOT ==========")
-print(STATICFILES_DIRS)
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -164,6 +155,4 @@ SOCIALACCOUNT_PROVIDERS = {
         "redirect_uri": str(BASE_DIR) + "/api/oauth2/login/redirect"
     }
 }
-
-print(str(BASE_DIR) + "/api/oauth2/login/redirect")
 

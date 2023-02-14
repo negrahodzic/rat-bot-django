@@ -8,7 +8,7 @@
 {% block body %}
 <div class="container">
     <div class="row mt-3 mb-2">
-        <h3 class="text-center">Details for <u>{{result.scrim_name}} ({{result.date_played}})</u> scrim played at <b>{{result.server_name}}</b>
+        <h3 class="text-center">Details for <u>{{result.scrim_name}} ({{result.date_played}})</u> scrim played at <b>{{result.guild_name}}</b>
             server</h3>
     </div>
     <table id="results_detail" class="table table-striped display">
@@ -23,7 +23,7 @@
         {% for score in scores %}
         <tr>
             <th scope="row" class="dt-center">{{ score.rank }}</th>
-            <td class="dt-center">{{ score.team_id.team_name }}</td>
+            <td class="dt-center">{{ score.team.team_name }}</td>
             <td class="dt-center">{{ score.tp }}</td>
         </tr>
         {% endfor %}

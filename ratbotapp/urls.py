@@ -1,11 +1,11 @@
-from pprint import pprint
-
 import allauth.account.views
+from django.conf.urls.static import static
 from django.urls import path
-
-from ratbotwebsite import settings
-from . import views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from ratbotwebsite import settings
+
+from . import views
+from .views import ResultsListCreateView, ResultsRetrieveUpdateDestroyView
 
 urlpatterns = [
     path('', views.index, name='home'),
@@ -19,7 +19,11 @@ urlpatterns = [
     path('api/oauth2/login/redirect', views.discord_login_redirect, name='discord_login_redirect'),
     path('login', views.login_btn, name='login'),
     path('statistics', views.statistics_page, name='statistics'),
+    path('api/results', ResultsListCreateView.as_view(), name='results_list_create'),
+    path('api/results/<int:pk>', ResultsRetrieveUpdateDestroyView.as_view(), name='results_retrieve_update_destroy')
+
 ]
 
 if settings.DEBUG:
     urlpatterns += staticfiles_urlpatterns()
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

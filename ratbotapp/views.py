@@ -8,9 +8,11 @@ import requests
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
+from rest_framework import generics
 
 from ratbotwebsite.settings import BASE_DIR
 from .models import Result, Score
+from .serializers import ResultsSerializer
 
 
 # Create your views here.
@@ -158,7 +160,7 @@ def statistics_page(request):
     #
     # top_stats = top_results
 
-    top_stats = Score.objects.filter(tp__gte=0).order_by('-tp').select_related('result_id')[:3]
+    top_stats = Score.objects.filter(tp__gte=0).order_by('-tp').select_related('result')[:3]
 
     context = {
         'statistics': {
@@ -169,6 +171,18 @@ def statistics_page(request):
     }
 
     pprint(context)
-    pprint(top_stats[0].result_id.server_name)
+    # pprint(top_stats[0].result.server_name)
 
     return render(request, 'ratbot/statistics.html', context)
+
+
+class ResultsListCreateView(generics.ListCreateAPIView):
+    print('ResultsListCreateView')
+    queryset = Result.objects.all()
+    serializer_class = ResultsSerializer
+
+
+class ResultsRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    print('ResultsRetrieveUpdateDestroyView')
+    queryset = Result.objects.all()
+    serializer_class = ResultsSerializer

@@ -1,10 +1,10 @@
 from django.contrib import admin
-# from ratbotapp.models import DiscordUser
 
-from .models import Result, Score, DiscordUser, Team
+from .models import Result, Score, DiscordUser, Team, Membership, Server
 
 # Register your models here.
-
+admin.site.register(Server)
+admin.site.register(Membership)
 admin.site.register(DiscordUser)
 admin.site.register(Result)
 admin.site.register(Score)

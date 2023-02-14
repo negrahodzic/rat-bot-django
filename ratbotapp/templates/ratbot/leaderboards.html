@@ -7,17 +7,6 @@
 
 {% block body %}
 <div class="container">
-    <!--    <div class="row">-->
-    <!--        <div class="col-6">-->
-    <!--            Search:-->
-    <!--        </div>-->
-    <!--        <div class="col-6">-->
-    <!--            <form class="d-flex" role="search">-->
-    <!--                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">-->
-    <!--                <button class="btn btn-outline-success" type="submit">Search</button>-->
-    <!--            </form>-->
-    <!--        </div>-->
-    <!--    </div>-->
     <div class="row mt-3 mb-2">
         <h3 class="text-center">List of all scrim results hosted by Rat Bot</h3>
     </div>
@@ -35,7 +24,7 @@
         {% for result in results %}
         <tr>
             <th scope="row" class="dt-center">{{ result.pk }}</th>
-            <td class="dt-center"><a href="{% url 'results_detail' result.pk %}">{{ result.server_name }}</a></td>
+            <td class="dt-center"><a href="{% url 'results_detail' result.pk %}">{{ result.server.server_name }}</a></td>
             <td class="dt-center">{{ result.scrim_name }}</td>
             <td class="dt-center">{{ result.get_scrim_type.label }}</td>
             <td class="dt-center">{{ result.date_played }}</td>

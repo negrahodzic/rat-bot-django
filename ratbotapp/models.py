@@ -24,11 +24,39 @@ class DiscordUser(models.Model):
         return True
 
 
+class Membership(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100, unique=True)
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+    duration = models.DurationField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.price} euros ({self.duration.days} days)"
+
+class Server(models.Model):
+    id = models.AutoField(primary_key=True)
+    guild_id = models.IntegerField(unique=True)
+    guild_name = models.CharField(default="", max_length=100)
+    membership = models.ForeignKey(Membership, on_delete=models.RESTRICT, null=True)
+    membership_start_date = models.DateTimeField(null=True, blank=True)
+    membership_end_date = models.DateTimeField(null=True, blank=True)
+    profile_image = models.ImageField(upload_to='server_images/', null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.guild_name}"
+
+
 class Result(models.Model):
     id = models.AutoField(primary_key=True)
-    server_id = models.IntegerField(default=123456, )
-    server_name = models.CharField(default="", max_length=100)
-    scrim_name = models.CharField(default="", max_length=100)  # from SheetName
+    staff_id = models.CharField(default="", max_length=50)  # id of person who used %sheet results last
+    server = models.ForeignKey(Server, on_delete=models.RESTRICT, default=None)
+    scrim_name = models.CharField(default="", max_length=100)
+
+    # scoring_system_id
 
     class ScrimType(models.TextChoices):
         PRO = 'pro', 'Pro'
@@ -40,24 +68,32 @@ class Result(models.Model):
         choices=ScrimType.choices,
         default=ScrimType.OPEN,
     )
-    date_played = models.DateField(default=timezone.now())
-    time_played = models.DateField(default=timezone.now())
-    created_at = models.DateField(default=timezone.now())
-    updated_at = models.DateField(default=timezone.now())
-    author = models.CharField(default="author", max_length=100)  # id of person who used %sheet results last
+
+    date_played = models.DateField()
+    time_played = models.TimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 
     def __str__(self):
-        return f"{self.server_name} - {self.scrim_name} - {self.scrim_type} - {self.time_played}"
+        return f"{self.scrim_name} - {self.time_played} ({self.scrim_type})"
 
     def get_scrim_type(self) -> ScrimType:
         return self.ScrimType(self.scrim_type)
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.date_played = timezone.now().date()
+        super().save(*args, **kwargs)
 
 
 class Team(models.Model):
     id = models.AutoField(primary_key=True)
     team_name = models.CharField(max_length=30, unique=True)
-    team_tag = models.CharField(max_length=10, default="/")
+    team_tag = models.CharField(max_length=10, default="")
     team_slug = models.CharField(max_length=60, unique=False, editable=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.team_name} | {self.team_tag}"
@@ -70,23 +106,19 @@ class Team(models.Model):
 class Score(models.Model):
     id = models.AutoField(primary_key=True)
     rank = models.IntegerField(default=0)
-    result_id = models.ForeignKey(Result, on_delete=models.CASCADE, null=True)
-    team_id = models.ForeignKey(Team, on_delete=models.DO_NOTHING, null=True)
-    team_managers = models.CharField(max_length=100, default=11221123)
-    wwcd = models.IntegerField(default=0)
-    pp = models.IntegerField(default=0)
-    kp = models.IntegerField(default=0)
-    tp = models.IntegerField(default=0)
+    result = models.ForeignKey(Result, on_delete=models.CASCADE, default=None)
+    team = models.ForeignKey(Team, on_delete=models.RESTRICT, default=None)
+    team_managers = models.CharField(max_length=200, default='Unknown')
+    wwcd = models.PositiveSmallIntegerField(default=0)
+    pp = models.PositiveSmallIntegerField(default=0)
+    kp = models.PositiveSmallIntegerField(default=0)
+    tp = models.PositiveSmallIntegerField(default=0)
     missed_games = models.IntegerField(default=0)
-    created_at = models.DateField(default=timezone.now())
-    updated_at = models.DateField(default=timezone.now())
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"#{self.rank} - {self.team_id.team_name} - {self.tp}"
-
-
-class Server(models.Model):
-    pass
+        return f"#{self.rank} - {self.team.team_name} - {self.tp}"
 
 
 class Scrim(models.Model):
