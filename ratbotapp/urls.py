@@ -20,7 +20,8 @@ urlpatterns = [
     path('login', views.login_btn, name='login'),
     path('statistics', views.statistics_page, name='statistics'),
     path('api/results', ResultsListCreateView.as_view(), name='results_list_create'),
-    path('api/results/<int:pk>', ResultsRetrieveUpdateDestroyView.as_view(), name='results_retrieve_update_destroy')
+    path('api/results/<int:pk>', ResultsRetrieveUpdateDestroyView.as_view(), name='results_retrieve_update_destroy'),
+    path('api/ratbot_results', views.ratbot_results_api, name='ratbot_results_api'),
 
 ]
 

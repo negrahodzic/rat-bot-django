@@ -52,7 +52,7 @@ class Server(models.Model):
 
 class Result(models.Model):
     id = models.AutoField(primary_key=True)
-    staff_id = models.CharField(default="", max_length=50)  # id of person who used %sheet results last
+    generated_by = models.CharField(default="", max_length=100)  # id of person who used %sheet results last
     server = models.ForeignKey(Server, on_delete=models.RESTRICT, default=None)
     scrim_name = models.CharField(default="", max_length=100)
 

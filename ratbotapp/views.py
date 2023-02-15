@@ -8,10 +8,12 @@ import requests
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
-from rest_framework import generics
+from requests import Response
+from rest_framework import generics, status
+from rest_framework.utils import json
 
 from ratbotwebsite.settings import BASE_DIR
-from .models import Result, Score
+from .models import Result, Score, Server, Team
 from .serializers import ResultsSerializer
 
 
@@ -181,8 +183,95 @@ class ResultsListCreateView(generics.ListCreateAPIView):
     queryset = Result.objects.all()
     serializer_class = ResultsSerializer
 
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 
 class ResultsRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     print('ResultsRetrieveUpdateDestroyView')
     queryset = Result.objects.all()
     serializer_class = ResultsSerializer
+
+from django.utils import timezone
+@csrf_exempt
+def ratbot_results_api(request):
+    final_data = json.loads(request.body)
+    print("========= final_data ==========")
+    pprint(final_data)
+    # Extract relevant data from final_data
+    server_data = final_data.get('server', {})
+    result_data = final_data.get('result', {})
+    scores_data = final_data.get('scores', [])
+
+    # Create or update Server instance
+    server, _ = Server.objects.update_or_create(
+        guild_id=server_data.get('guild_id'),
+        defaults={
+            'guild_name': server_data.get('guild_name')
+        }
+    )
+
+    # Create Result instance
+    result = Result.objects.create(
+        generated_by=result_data.get('generated_by'),
+        server=server,
+        scrim_name=result_data.get('scrim_name'),
+        scrim_type=Result.ScrimType.OPEN,
+        date_played=result_data.get('date_played') or timezone.now().date(),
+        time_played=result_data.get('time_played')
+    )
+
+    # Create Score instances
+    scores = []
+    for score_data in scores_data:
+        team_name = score_data.get('team_name')
+        team_tag = score_data.get('team_tag')
+        team, _ = Team.objects.get_or_create(
+            team_name=team_name,
+            defaults={
+                'team_tag': team_tag
+            }
+        )
+        score = Score(
+            result=result,
+            team=team,
+            rank=score_data.get('rank'),
+            wwcd=score_data.get('wwcd'),
+            pp=score_data.get('pp'),
+            kp=score_data.get('kp'),
+            tp=score_data.get('tp'),
+            missed_games=score_data.get('missed_games')
+        )
+        scores.append(score)
+    Score.objects.bulk_create(scores)
+
+    # Return the Result instance
+    # Return the Result instance as a JSON response
+    return JsonResponse({
+        'generated_by': result.generated_by,
+        'server': {
+            'guild_id': result.server.guild_id,
+            'guild_name': result.server.guild_name
+        },
+        'scrim_name': result.scrim_name,
+        'scrim_type': result.scrim_type,
+        'date_played': result.date_played,
+        'time_played': result.time_played,
+        'scores': [
+            {
+                'team_name': score.team.team_name,
+                'team_tag': score.team.team_tag,
+                'rank': score.rank,
+                'wwcd': score.wwcd,
+                'pp': score.pp,
+                'kp': score.kp,
+                'tp': score.tp,
+                'missed_games': score.missed_games
+            } for score in result.score_set.all()
+        ]
+    })
+
