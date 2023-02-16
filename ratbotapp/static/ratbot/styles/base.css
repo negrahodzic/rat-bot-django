@@ -6,6 +6,11 @@ body {
     background-repeat: repeat;
 }
 
+.rat-bot-title {
+  font-size: 2rem;
+  color: #fff;
+  text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #BFBFBF, 0 0 70px #BFBFBF, 0 0 80px #BFBFBF, 0 0 100px #BFBFBF;
+}
 
 .space-rat {
   display: block;
@@ -17,12 +22,15 @@ body {
   box-shadow: 0 0 20px #003366;
 }
 
-/* proffesional/serious */
-.feature_image_yes {
+.feature_image {
   display: block;
   max-width: 200px;
   width: 80%;
   margin: 0 auto;
+}
+
+.flipped {
+  transform: scaleX(-1) !important;
 }
 
 .floating {
@@ -41,13 +49,12 @@ body {
   }
 }
 
-
-.feature_image_no {
-  display: block;
-  max-width: 200px;
-  width: 80%;
-  margin: 0 auto;
-  transform: scaleX(-1);
+.gradient-footer {
+  background-color: #000000;
+  background-image: radial-gradient(circle, #000000 0%, #051930 100%);
+  background-image: linear-gradient(to top, #000000 0%, #051930 100%);
+  text-shadow: 2px 2px #000;
+  box-shadow: 0 0 10px #656b6f;
 }
 
 .gradient {
@@ -90,17 +97,127 @@ body {
     margin-left: 5px !important;
     margin-right: 5px !important;
   }
+
+  .features {
+    margin-left: 5px !important;
+    margin-right: 5px !important;
+  }
 }
 
 .feature_typing {
-  overflow: hidden; /* Ensures the content is not visible until animation starts */
-  white-space: nowrap; /* Keeps text on a single line */
-  margin: 0; /* Removes default margin */
-  letter-spacing: 0.15em; /* Adjusts spacing between letters */
-  animation: typing 3s steps(50) forwards; /* Starts the typing animation */
+    text-align: center;
+    opacity: 0;
+}
+
+.start_typing {
+  overflow: hidden;
+  white-space: nowrap;
+  margin: 0 auto;
+  letter-spacing: .15em;
+  animation: typing 4s steps(40, end), blink .85s step-end infinite;
+  animation-fill-mode: forwards;
 }
 
 @keyframes typing {
-  from { width: 0 } /* Starts with 0 width */
-  to { width: 100% } /* Ends with full width */
+  from { opacity: 0; width: 0; }
+
+  to { opacity: 1; width: 100% }
+}
+
+@keyframes blink {
+  from, to { border-color: transparent }
+  50% { border-color: transparent; }
+}
+
+.navbar .nav-link.login {
+  margin-left: 10px;
+  margin-right: 10px;
+  padding: 3px 15px;
+  background-color: #04172b;
+  border: 1px solid #b5c9c9;
+  border-radius: 5px;
+  box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+}
+
+.navbar .nav-link.login:hover {
+  background-color: #55727e;
+  border: 1px solid #b5c9c9;
+}
+
+.welcome {
+  margin-left: 10px;
+  margin-right: 10px;
+  font-weight: bold;
+  color: #b5c9c9;
+  text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.5);
+  text-decoration: none;
+}
+
+/*.card-img-top {
+  display: block;
+  max-width: 200px;
+  width: 70%;
+  margin: 0 auto;
+  background-color: #999c9b;
+  background-image: radial-gradient(circle, #999c9b 0%, #051930 100%);
+  background-image: linear-gradient(to top, #051930 0%, #999c9b 100%);
+  border-radius: 50%;
+  border: 5px solid #040612;
+  box-shadow: 0 0 20px #003366;
+}*/
+
+/*.card-body {
+  text-align: justify;
+}
+
+.card-img-top {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  background-color: #161616;
+  background-image: radial-gradient(circle, #161616 0%, #051930 100%);
+  border-radius: 50%;
+  border: 5px solid #040612;
+  box-shadow: 0 0 20px #003366;
+}*/
+
+.card {
+  background-color: #252525;
+  border: none;
+  border-radius: 10px;
+  color: #ffffff;
+  overflow: hidden;
+  min-height: 450px;
+  margin: 10px;
+}
+
+.card-img-top {
+  height: 200px;
+  object-fit: cover;
+   background-color: #000000;
+  background-image: radial-gradient(circle, #051930 0%, #999c9b 100%);
+  background-image: linear-gradient(to top, #999c9b 0%, #051930 100%);
+}
+
+.card-title {
+  font-size: 1.2rem;
+  margin-top: 10px;
+}
+
+.card-text {
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+.card-footer {
+  background-color: #161616;
+  border-top: none;
+  color: #ffffff;
+  font-size: 0.8rem;
+  padding: 5px;
+}
+
+.top-3 {
+   margin: 5px;
 }

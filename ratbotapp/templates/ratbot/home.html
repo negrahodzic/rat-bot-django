@@ -3,13 +3,19 @@
 {% load static %}
 
 {% block body %}
-<div class="container">
+<div class="container mb-2">
     <div class="row">
         <div class="text-center mt-2 mb-2">
             <img src="{% static 'ratbot/images/space-rat.png' %}" alt="Rat Bot" class="space-rat floating">
         </div>
     </div>
-    <div class="row bg-dark mt-3 text-center introduction">
+    <div class="row">
+        <div class="col-12 col-md-12 p-3 mt-3 text-center">
+            <h1 class="feature_typing"> Rat Bot 2.0</h1>
+        </div>
+    </div>
+
+    <div class="row bg-dark mt-3 text-center introduction mb-3">
         <div class="text-light">
             <p>
                 Welcome to the Rat Bot 2.0 website, where the space rat is ready to make your gaming experience out of
@@ -30,12 +36,12 @@
             </p>
         </div>
     </div>
-    <div class="row  mt-2 mb-2">
-        <div class="col-4">
-            <img src="{% static 'ratbot/images/ratbot-correct.png' %}" alt="Rat Bot" class="feature_image_yes floating">
+    <div class="row mt-3 mb-3 features">
+        <div class="col-12 col-md-4  p-3 mt-3 ">
+            <img src="{% static 'ratbot/images/ratbot-correct.png' %}" alt="Rat Bot" class="feature_image floating">
         </div>
-        <div class="col-8 gradient p-3 mt-3 text-light">
-            <h3 class="feature_typing"> What can I do?</h3>
+        <div class="col-12 col-md-8 gradient p-3 mt-3 text-light">
+            <h4 class="feature_typing pb-3">What can I do?</h4>
             <p>
                 I may be just a space rat, but I can juggle multiple scrims like it's cheese! I can even open and close
                 registrations with my sharp teeth and assign slots with my tiny paws. I can calculate and generate
@@ -45,61 +51,69 @@
             </p>
         </div>
     </div>
-    <div class="row mt-2 mb-2">
-        <div class="col-8 gradient p-3 mt-3 text-light">
-            <h3 class="feature_typing"> What I still didn't learn?</h3>
+
+    <div class="row mt-2 mb-5 features">
+        <div class="col-12 col-md-8 gradient p-3 mt-3 text-light order-2 order-sm-1">
+            <h4 class="feature_typing pb-3"> What I still didn't learn?</h4>
             <p>
-                I may be a space rat, but I'm not a miracle worker. I can't provide auto bans or organize more than four
+                Being a space rat doesn't make me a miracle worker. I can't provide auto bans or organize more than four
                 games in one scrim. And even space rats need to eat, so our services are not free. But don't worry,
                 we're constantly exploring new frontiers and developing innovative features to take your scrims to the
-                next galaxy! </p></div>
-        <div class="col-4">
-            <img src="{% static 'ratbot/images/ratbot-incorrect.png' %}" alt="Rat Bot"
-                 class="feature_image_no floating">
+                next galaxy!
+            </p>
         </div>
-    </div>
-    <div class="top-3-reviews mt-3 text-center">
-        TOP 3 <br>
-        Nothing would be possible without early supporters!
+        <div class="col-12 col-md-4 p-3 mt-3 order-1 order-sm-2">
+            <img src="{% static 'ratbot/images/ratbot-incorrect.png' %}" alt="Rat Bot"
+                 class="feature_image floating">
+        </div>
     </div>
 
-    <div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
+    <div class="top-3 text-center gradient mt-5 mb-3 p-4">
+        <h2 class="feature_typing">TOP 3 REVIEWS</h2>
+        <p>Nothing would be possible without early supporters!</p>
+    </div>
+
+
+    <div class="row row-cols-1 row-cols-md-3 g-4 mt-3 mb-2">
         <div class="col">
-            <div class="card">
+            <div class="card gradient">
                 <img src="{% static 'ratbot/images/syn-logo.png' %}" class="card-img-top" alt="...">
                 <div class="card-body">
-                    <h5 class="card-title">SEMA | Syn Scrims</h5>
+                    <h5 class="card-title text-center">SEMA | Syn Scrims</h5>
                     <p class="card-text">Rat bot is great because it really makes Scrim making procedure so much easier.
                         Most of the work is done by bot, so basically all we need to do is just keep an eye in case
                         someone does not fill the registration properly or something similiar. Also what is great is
                         that you will have full time support in case you need help with a bot.</p>
-                    <p class="card-text"><small class="text-muted">Owners Kimy & Sema</small></p>
+                    <p class="card-text text-center"><small>Owners Kimy & Sema</small></p>
                 </div>
             </div>
         </div>
         <div class="col">
-            <div class="card">
-                <img src="{% static 'ratbot/images/illegaly_logo.png' %}" class="card-img-top" alt="...">
+            <div class="card gradient">
+                <img src="{% static 'ratbot/images/logo-veng.png' %}" class="card-img-top" alt="...">
                 <div class="card-body">
-                    <h5 class="card-title">ILLEGALLY ESPORTS</h5>
+                    <h5 class="card-title text-center">Vengeance Esports</h5>
                     <p class="card-text">Rat bot is great because it really makes Scrim making procedure so much easier.
                         Most of the work is done by bot, so basically all we need to do is just keep an eye in case
                         someone does not fill the registration properly or something similiar. Also what is great is
                         that you will have full time support in case you need help with a bot.</p>
-                    <p class="card-text"><small class="text-muted">Owner Lara</small></p>
+                    <p class="card-text text-center"><small>Owner Lara</small></p>
                 </div>
             </div>
         </div>
         <div class="col">
-            <div class="card">
-                <img src="{% static 'ratbot/images/ratbot-incorrect.png' %}" class="card-img-top" alt="...">
+            <div class="card gradient">
+                <img src="{% static 'ratbot/images/logo-gott.png' %}" class="card-img-top" alt="...">
                 <div class="card-body">
-                    <h5 class="card-title">God Of Lions</h5>
-                    <p class="card-text">Rat bot is great because it really makes Scrim making procedure so much easier.
-                        Most of the work is done by bot, so basically all we need to do is just keep an eye in case
-                        someone does not fill the registration properly or something similiar. Also what is great is
-                        that you will have full time support in case you need help with a bot.</p>
-                    <p class="card-text"><small class="text-muted">Owner Elli</small></p>
+                    <h5 class="card-title text-center">God Of Lions</h5>
+                    <p class="card-text">
+                        Out of all the bots we tried out for our scrims so far, Rat Bot makes your life
+                        the easiest. It has incredible features that reduce the amount of time spent creating slots and
+                        results
+                        drastically. In case of any problems or questions the support on the discord server is always
+                        amazingly
+                        fast.</p>
+                    <p class="card-text text-center"><small>Owner Elli</small></p>
                 </div>
             </div>
         </div>
