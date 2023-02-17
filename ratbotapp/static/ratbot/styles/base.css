@@ -65,6 +65,15 @@ body {
   box-shadow: 0 0 10px #656b6f;
   border-radius: 10px;
 }
+
+.gradient-2 {
+  background-color: #000000;
+  background-image: radial-gradient(circle, #051930 0%, #000000 100%);
+  text-shadow: 2px 2px #000;
+  box-shadow: 0 0 10px #656b6f;
+  border-radius: 10px;
+}
+
 .navbar {
   background-color: #000000;
   background-image: radial-gradient(circle, #051930 0%, #000000 100%);
