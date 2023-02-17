@@ -238,3 +238,32 @@ body {
   background-color: #55727e;
   border: 1px solid #b5c9c9;
 }
+
+.discord-login-btn {
+  color: white;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding: 10px 15px;
+  background-color: #04172b;
+  border: 1px solid #b5c9c9;
+  border-radius: 5px;
+  box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+ }
+
+.discord-login-btn:hover {
+  background-color: #55727e;
+  border: 1px solid #b5c9c9;
+}
+
+.container-discord-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.discord-login {
+  max-width: 400px;
+  width: 100%;
+}

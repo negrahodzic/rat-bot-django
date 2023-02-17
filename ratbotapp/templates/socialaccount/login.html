@@ -1,0 +1,25 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+
+{% load static %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+<div class="container container-discord-login mb-2 p-5 ">
+    <div class="row discord-login">
+        <div class="text-center mt-2 mb-2 gradient p-4">
+            <h1>{% blocktrans with provider.name as provider %}Sign In Via {{ provider }}{% endblocktrans %}</h1>
+
+            <p>{% blocktrans with provider.name as provider %}You are about to sign in using a third party account from
+                {{ provider }}.{% endblocktrans %}</p>
+
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="discord-login-btn">{% trans "Sign in" %}</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
