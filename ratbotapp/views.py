@@ -113,6 +113,14 @@ def login_btn(request: HttpRequest):
     # return redirect("/api/oauth2/login")
     return redirect("/accounts/discord/login")
 
+@csrf_exempt
+@login_required(login_url="/accounts/discord/login")
+def teams(request):
+    print("======== STARTED teams() =======")
+    data = Team.objects.all()
+    return render(request, 'ratbot/teams.html', {
+        'teams': data
+    })
 
 # @csrf_protect
 @csrf_exempt

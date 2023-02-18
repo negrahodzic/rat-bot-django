@@ -9,8 +9,9 @@ from .views import ResultsListCreateView, ResultsRetrieveUpdateDestroyView
 
 urlpatterns = [
     path('', views.index, name='home'),
-    path('leaderboards/', views.leaderboards_page, name='leaderboards'),
-    path('results/<int:pk>/', views.results_detail, name='results_detail'),
+    path('teams', views.teams, name='teams'),
+    path('leaderboards', views.leaderboards_page, name='leaderboards'),
+    path('results/<int:pk>', views.results_detail, name='results_detail'),
     path('account/logout', allauth.account.views.logout, name='logout'),
     path('account/login', allauth.account.views.login, name='login'),
     path('oauth2', views.oauth2, name='oauth2'),

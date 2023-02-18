@@ -19,6 +19,7 @@
             src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.js"></script>
     </script>
     <script src="{% static 'ratbot/scripts/scripts.js' %}"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     {% block additional_cdn %}{% endblock %}
 </head>
 <body>
@@ -39,7 +40,7 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Features</a>
+                    <a class="nav-link" href="{% url 'teams' %}">Teams</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'leaderboards' %}">Leaderboards</a>

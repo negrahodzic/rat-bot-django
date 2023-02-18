@@ -1,5 +1,5 @@
 body {
-    color: #cae2d8 !important;
+    color: #ffffff !important;
     /*background: linear-gradient(to bottom, #0c2340, #2a2734);*/
     background-color: #0c2340;
     background-image: url('space-background.jpg');
@@ -55,6 +55,7 @@ body {
   background-image: linear-gradient(to top, #000000 0%, #051930 100%);
   text-shadow: 2px 2px #000;
   box-shadow: 0 0 10px #656b6f;
+  bottom:0;
 }
 
 .gradient {
@@ -276,3 +277,86 @@ body {
   max-width: 400px;
   width: 100%;
 }
+
+/* DATA TABLE */
+.dataTables_wrapper .dataTables_filter input[type=search],
+.dataTables_wrapper .dataTables_length select {
+    color:  #999c9b;
+    background-image: radial-gradient(circle, #051930 0%, #000000 100%);
+    border: 1px solid white;
+    border-radius: 4px;
+    padding: 8px;
+    margin-bottom: 20px;
+}
+
+.dataTables_wrapper .dataTables_empty {
+    color: white !important;
+}
+
+/* RANKING STATS */
+ .rectangle {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    border: 1px solid white;
+    margin-bottom: 10px;
+    border: 3px solid #040612;
+    box-shadow: 0 0 20px #003366;
+  }
+   .rectangle-content {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+        margin: 0;
+    }
+
+  .gold {
+    height: 200px;
+    font-size: 35px;
+    text-align: center;
+    font-weight: bold;
+    color: black;
+    background-color: #D4AF37;
+  }
+
+  .silver {
+    height: 150px;
+    margin-top: 50px;
+    font-size: 35px;
+    text-align: center;
+    font-weight: bold;
+    color: black;
+    background-color: #C0C0C0;
+  }
+
+  .bronze {
+    height: 100px;
+    margin-top: 100px;
+    font-size: 35px;
+        text-align: center;
+    font-weight: bold;
+    color: black;
+    background-color: #CD7F32;
+  }
+
+  .team-name {
+    text-align: center;
+    margin-top: 10px;
+    font-weight: bold;
+    border: 3px solid #040612;
+    box-shadow: 0 0 20px #003366;
+  }
+
+  .team-text {
+    text-align: center;
+    margin-top: 10px;
+    border: 3px solid #040612;
+    box-shadow: 0 0 20px #003366;
+  }
+
+  .top-3-teams{
+    text-align: center;
+    margin: 30px;
+    padding: 10px;
+  }
