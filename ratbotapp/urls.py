@@ -3,6 +3,8 @@ from django.conf.urls.static import static
 from django.urls import path
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from ratbotwebsite import settings
+from django.urls import re_path
+from django.views.generic import RedirectView
 
 from . import views
 from .views import ResultsListCreateView, ResultsRetrieveUpdateDestroyView
@@ -23,6 +25,7 @@ urlpatterns = [
     path('api/results', ResultsListCreateView.as_view(), name='results_list_create'),
     path('api/results/<int:pk>', ResultsRetrieveUpdateDestroyView.as_view(), name='results_retrieve_update_destroy'),
     path('api/ratbot_results', views.ratbot_results_api, name='ratbot_results_api'),
+    re_path(r'^.*$', RedirectView.as_view(url='/')),
 
 ]
 

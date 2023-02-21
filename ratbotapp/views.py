@@ -1,6 +1,7 @@
 from pprint import pprint
 import os.path
 
+from django.core.exceptions import ValidationError
 from django.db.models import Sum, Max, F
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpRequest, JsonResponse
@@ -23,7 +24,6 @@ def index(request):
     return render(request, 'ratbot/home.html', {
         'test': "Testing"
     })
-
 
 auth_url_discord = "https://discord.com/api/oauth2/authorize?client_id=1039941503423889548&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Fapi%2Foauth2%2Flogin%2Fredirect&response_type=code&scope=identify"
 
@@ -113,6 +113,7 @@ def login_btn(request: HttpRequest):
     # return redirect("/api/oauth2/login")
     return redirect("/accounts/discord/login")
 
+
 @csrf_exempt
 @login_required(login_url="/accounts/discord/login")
 def teams(request):
@@ -121,6 +122,7 @@ def teams(request):
     return render(request, 'ratbot/teams.html', {
         'teams': data
     })
+
 
 # @csrf_protect
 @csrf_exempt
@@ -204,36 +206,97 @@ class ResultsRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Result.objects.all()
     serializer_class = ResultsSerializer
 
+
 from django.utils import timezone
+
+
 @csrf_exempt
 def ratbot_results_api(request):
-    final_data = json.loads(request.body)
-    print("========= final_data ==========")
-    pprint(final_data)
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request method'})
+
+    try:
+        final_data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON format'})
+
     # Extract relevant data from final_data
     server_data = final_data.get('server', {})
     result_data = final_data.get('result', {})
     scores_data = final_data.get('scores', [])
 
-    # Create or update Server instance
-    server, _ = Server.objects.update_or_create(
-        guild_id=server_data.get('guild_id'),
-        defaults={
-            'guild_name': server_data.get('guild_name')
-        }
-    )
+    # Get the guild_id and guild_name values from server_data
+    guild_id = server_data.get('guild_id')
+    guild_name = server_data.get('guild_name')
 
-    # Create Result instance
-    result = Result.objects.create(
-        generated_by=result_data.get('generated_by'),
+    # Raise an exception if guild_name is not provided or is an empty string
+    if not guild_name:
+        raise ValueError("Guild name is required!")
+    if not isinstance(guild_name, str):
+        raise ValueError("Guild name should be a string.")
+
+    # Get the existing server instance if it already exists
+    try:
+        server = Server.objects.get(guild_id=guild_id)
+    except Server.DoesNotExist:
+        server = None
+
+    # Create or update the server instance if it doesn't exist or if guild_name has changed
+    if server is None or server.guild_name != guild_name:
+        server, server_created = Server.objects.update_or_create(
+            guild_id=guild_id,
+            defaults={
+                'guild_name': guild_name
+            }
+        )
+        print(f"Server created or updated? {'created' if server_created else 'updated'}")
+
+    # Check if all required result data fields are present and of the expected type
+    required_result_fields = {
+        'generated_by': str,
+        'scrim_name': str,
+        'date_played': str,
+        'time_played': str,
+    }
+    for field, field_type in required_result_fields.items():
+        if not result_data.get(field):
+            raise ValueError(f"{field} is required!")
+        if not isinstance(result_data.get(field), field_type):
+            raise ValueError(f"{field} should be a {field_type.__name__}.")
+
+    # Check if a result with the same server, scrim name, and date already exists
+    result = Result.objects.filter(
         server=server,
         scrim_name=result_data.get('scrim_name'),
-        scrim_type=Result.ScrimType.OPEN,
-        date_played=result_data.get('date_played') or timezone.now().date(),
+        date_played=result_data.get('date_played'),
         time_played=result_data.get('time_played')
-    )
+    ).first()
+
+    if result:
+        # Update the existing result
+        result.generated_by = result_data.get('generated_by')
+        result.scrim_type = Result.ScrimType.OPEN
+        result.save()
+    else:
+        try:
+            # Create a new Result instance
+            result = Result.objects.create(
+                generated_by=result_data.get('generated_by'),
+                server=server,
+                scrim_name=result_data.get('scrim_name'),
+                scrim_type=Result.ScrimType.OPEN,
+                date_played=result_data.get('date_played') or timezone.now().date(),
+                time_played=result_data.get('time_played')
+            )
+        except ValidationError as e:
+            # Handle validation error
+            print("Validation Error: ", e.message)
+        except Exception as e:
+            # Handle other exceptions
+            print("Error: ", e)
 
     # Create Score instances
+    print()
     scores = []
     for score_data in scores_data:
         team_name = score_data.get('team_name')
@@ -244,42 +307,36 @@ def ratbot_results_api(request):
                 'team_tag': team_tag
             }
         )
-        score = Score(
+        # Check if a score with the same rank already exists for this result
+        existing_score = Score.objects.filter(
             result=result,
-            team=team,
-            rank=score_data.get('rank'),
-            wwcd=score_data.get('wwcd'),
-            pp=score_data.get('pp'),
-            kp=score_data.get('kp'),
-            tp=score_data.get('tp'),
-            missed_games=score_data.get('missed_games')
-        )
-        scores.append(score)
+            rank=score_data.get('rank')
+        ).first()
+        if existing_score:
+            # Update the existing score
+            existing_score.team = team
+            existing_score.wwcd = score_data.get('wwcd')
+            existing_score.pp = score_data.get('pp')
+            existing_score.kp = score_data.get('kp')
+            existing_score.tp = score_data.get('tp')
+            existing_score.missed_games = score_data.get('missed_games')
+            existing_score.save()
+        else:
+            # Create a new Score instance
+            score = Score(
+                result=result,
+                team=team,
+                rank=score_data.get('rank'),
+                wwcd=score_data.get('wwcd'),
+                pp=score_data.get('pp'),
+                kp=score_data.get('kp'),
+                tp=score_data.get('tp'),
+                missed_games=score_data.get('missed_games')
+            )
+            # score.save()
+            scores.append(score)
+
     Score.objects.bulk_create(scores)
 
-    # Return the Result instance
-    # Return the Result instance as a JSON response
-    return JsonResponse({
-        'generated_by': result.generated_by,
-        'server': {
-            'guild_id': result.server.guild_id,
-            'guild_name': result.server.guild_name
-        },
-        'scrim_name': result.scrim_name,
-        'scrim_type': result.scrim_type,
-        'date_played': result.date_played,
-        'time_played': result.time_played,
-        'scores': [
-            {
-                'team_name': score.team.team_name,
-                'team_tag': score.team.team_tag,
-                'rank': score.rank,
-                'wwcd': score.wwcd,
-                'pp': score.pp,
-                'kp': score.kp,
-                'tp': score.tp,
-                'missed_games': score.missed_games
-            } for score in result.score_set.all()
-        ]
-    })
+    return JsonResponse({'success': 'Result saved successfully'})
 
