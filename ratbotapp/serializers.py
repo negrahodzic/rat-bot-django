@@ -2,12 +2,6 @@ from rest_framework import serializers
 from .models import Membership, Server, Result, Team, Score
 
 
-class ResultsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Result
-        fields = '__all__'
-
-
 class MembershipSerializer(serializers.ModelSerializer):
     class Meta:
         model = Membership
@@ -22,14 +16,6 @@ class ServerSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ResultSerializer(serializers.ModelSerializer):
-    server = ServerSerializer()
-
-    class Meta:
-        model = Result
-        fields = '__all__'
-
-
 class TeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
@@ -37,9 +23,16 @@ class TeamSerializer(serializers.ModelSerializer):
 
 
 class ScoreSerializer(serializers.ModelSerializer):
-    result = ResultSerializer()
-    team = TeamSerializer()
-
     class Meta:
         model = Score
-        fields = '__all__'
+        fields = ['id', 'rank', 'team_managers', 'wwcd', 'pp', 'kp', 'tp']
+
+
+class ResultSerializer(serializers.ModelSerializer):
+    guild_id = serializers.IntegerField(source='server.guild_id')
+    guild_name = serializers.CharField(source='server.guild_name')
+    scores = ScoreSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Result
+        fields = ['id', 'guild_id', 'guild_name', 'generated_by', 'scrim_name', 'date_played', 'time_played', 'scores']

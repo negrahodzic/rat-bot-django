@@ -14,12 +14,13 @@ from rest_framework import generics, status
 from rest_framework.utils import json
 
 from ratbotwebsite.settings import BASE_DIR
-from .models import Result, Score, Server, Team
-from .serializers import ResultsSerializer
 from rest_framework import viewsets
 
 from .models import Membership, Server, Result, Team, Score
 from .serializers import MembershipSerializer, ServerSerializer, ResultSerializer, TeamSerializer, ScoreSerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from datetime import datetime
 
 
 # Create your views here.
@@ -196,7 +197,7 @@ def statistics_page(request):
 class ResultsListCreateView(generics.ListCreateAPIView):
     print('ResultsListCreateView')
     queryset = Result.objects.all()
-    serializer_class = ResultsSerializer
+    serializer_class = ResultSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -209,7 +210,7 @@ class ResultsListCreateView(generics.ListCreateAPIView):
 class ResultsRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     print('ResultsRetrieveUpdateDestroyView')
     queryset = Result.objects.all()
-    serializer_class = ResultsSerializer
+    serializer_class = ResultSerializer
 
 
 from django.utils import timezone
@@ -358,10 +359,30 @@ class ServerViewSet(viewsets.ModelViewSet):
     http_method_names = ['get']
 
 
+from django.db.models import Prefetch
+
+
 class ResultViewSet(viewsets.ModelViewSet):
     queryset = Result.objects.all()
     serializer_class = ResultSerializer
-    http_method_names = ['get']
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        results = []
+        for result in serializer.data:
+            scores = Score.objects.filter(result=result['id'])
+            result['scores'] = scores.values()
+            results.append(result)
+        return Response(results)
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        result = serializer.data
+        scores = Score.objects.filter(result=result['id'])
+        result['scores'] = scores.values()
+        return Response(result)
 
 
 class TeamViewSet(viewsets.ModelViewSet):
@@ -395,17 +416,6 @@ class ServerDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Server.objects.all()
     serializer_class = ServerSerializer
 
-
-class ResultList(generics.ListCreateAPIView):
-    queryset = Result.objects.all()
-    serializer_class = ResultSerializer
-
-
-class ResultDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Result.objects.all()
-    serializer_class = ResultSerializer
-
-
 class TeamList(generics.ListCreateAPIView):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
@@ -424,3 +434,18 @@ class ScoreList(generics.ListCreateAPIView):
 class ScoreDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Score.objects.all()
     serializer_class = ScoreSerializer
+
+
+class CodashopView(APIView):
+    def get(self, request, format=None):
+        today = timezone.now().date()
+        results = Result.objects.filter(date_played=today)
+        serializer = ResultSerializer(results, many=True)
+        response_data = serializer.data
+        for i in range(len(response_data)):
+            scores = Score.objects.filter(result=response_data[i]['id'])
+            serializer = ScoreSerializer(scores, many=True)
+            response_data[i]['scores'] = serializer.data
+        return Response(response_data)
+
+
