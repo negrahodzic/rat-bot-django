@@ -5,6 +5,9 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from ratbotwebsite import settings
 from django.urls import re_path
 from django.views.generic import RedirectView
+from django.urls import path
+from .views import MembershipList, MembershipDetail, ServerList, ServerDetail, ResultList, ResultDetail, TeamList, TeamDetail, ScoreList, ScoreDetail
+from .views import MembershipViewSet, ServerViewSet, ResultViewSet, TeamViewSet, ScoreViewSet
 
 from . import views
 from .views import ResultsListCreateView, ResultsRetrieveUpdateDestroyView
@@ -26,6 +29,17 @@ urlpatterns = [
     path('api/results/<int:pk>', ResultsRetrieveUpdateDestroyView.as_view(), name='results_retrieve_update_destroy'),
     path('api/ratbot_results', views.ratbot_results_api, name='ratbot_results_api'),
     # re_path(r'^.*$', RedirectView.as_view(url='/')),
+    path('api/memberships/', MembershipViewSet.as_view({'get': 'list'}), name='membership-list'),
+    path('api/memberships/<int:pk>/', MembershipViewSet.as_view({'get': 'retrieve'}), name='membership-detail'),
+    path('api/servers/', ServerViewSet.as_view({'get': 'list'}), name='server-list'),
+    path('api/servers/<int:pk>/', ServerViewSet.as_view({'get': 'retrieve'}), name='server-detail'),
+    path('api/results/', ResultViewSet.as_view({'get': 'list'}), name='result-list'),
+    path('api/results/<int:pk>/', ResultViewSet.as_view({'get': 'retrieve'}), name='result-detail'),
+    path('api/teams/', TeamViewSet.as_view({'get': 'list'}), name='team-list'),
+    path('api/teams/<int:pk>/', TeamViewSet.as_view({'get': 'retrieve'}), name='team-detail'),
+    path('api/scores/', ScoreViewSet.as_view({'get': 'list'}), name='score-list'),
+    path('api/scores/<int:pk>/', ScoreViewSet.as_view({'get': 'retrieve'}), name='score-detail'),
+
 
 ]
 

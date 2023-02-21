@@ -16,6 +16,10 @@ from rest_framework.utils import json
 from ratbotwebsite.settings import BASE_DIR
 from .models import Result, Score, Server, Team
 from .serializers import ResultsSerializer
+from rest_framework import viewsets
+
+from .models import Membership, Server, Result, Team, Score
+from .serializers import MembershipSerializer, ServerSerializer, ResultSerializer, TeamSerializer, ScoreSerializer
 
 
 # Create your views here.
@@ -24,6 +28,7 @@ def index(request):
     return render(request, 'ratbot/home.html', {
         'test': "Testing"
     })
+
 
 auth_url_discord = "https://discord.com/api/oauth2/authorize?client_id=1039941503423889548&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Fapi%2Foauth2%2Flogin%2Fredirect&response_type=code&scope=identify"
 
@@ -340,3 +345,82 @@ def ratbot_results_api(request):
 
     return JsonResponse({'success': 'Result saved successfully'})
 
+
+class MembershipViewSet(viewsets.ModelViewSet):
+    queryset = Membership.objects.all()
+    serializer_class = MembershipSerializer
+    http_method_names = ['get']
+
+
+class ServerViewSet(viewsets.ModelViewSet):
+    queryset = Server.objects.all()
+    serializer_class = ServerSerializer
+    http_method_names = ['get']
+
+
+class ResultViewSet(viewsets.ModelViewSet):
+    queryset = Result.objects.all()
+    serializer_class = ResultSerializer
+    http_method_names = ['get']
+
+
+class TeamViewSet(viewsets.ModelViewSet):
+    queryset = Team.objects.all()
+    serializer_class = TeamSerializer
+    http_method_names = ['get']
+
+
+class ScoreViewSet(viewsets.ModelViewSet):
+    queryset = Score.objects.all()
+    serializer_class = ScoreSerializer
+    http_method_names = ['get']
+
+
+class MembershipList(generics.ListCreateAPIView):
+    queryset = Membership.objects.all()
+    serializer_class = MembershipSerializer
+
+
+class MembershipDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Membership.objects.all()
+    serializer_class = MembershipSerializer
+
+
+class ServerList(generics.ListCreateAPIView):
+    queryset = Server.objects.all()
+    serializer_class = ServerSerializer
+
+
+class ServerDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Server.objects.all()
+    serializer_class = ServerSerializer
+
+
+class ResultList(generics.ListCreateAPIView):
+    queryset = Result.objects.all()
+    serializer_class = ResultSerializer
+
+
+class ResultDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Result.objects.all()
+    serializer_class = ResultSerializer
+
+
+class TeamList(generics.ListCreateAPIView):
+    queryset = Team.objects.all()
+    serializer_class = TeamSerializer
+
+
+class TeamDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Team.objects.all()
+    serializer_class = TeamSerializer
+
+
+class ScoreList(generics.ListCreateAPIView):
+    queryset = Score.objects.all()
+    serializer_class = ScoreSerializer
+
+
+class ScoreDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Score.objects.all()
+    serializer_class = ScoreSerializer
