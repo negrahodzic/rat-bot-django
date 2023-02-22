@@ -1,10 +1,7 @@
 from pprint import pprint
-import os.path
-
 from django.core.exceptions import ValidationError
-from django.db.models import Sum, Max, F
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, HttpRequest, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.http import HttpResponse, HttpRequest, JsonResponse, HttpResponseBadRequest
 import requests
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
@@ -16,12 +13,13 @@ from rest_framework.utils import json
 from ratbotwebsite.settings import BASE_DIR
 from rest_framework import viewsets
 
-from .models import Membership, Server, Result, Team, Score
-from .serializers import MembershipSerializer, ServerSerializer, ResultSerializer, TeamSerializer, ScoreSerializer
+from .models import Server, Result, Team, Score
+from .serializers import ResultSerializer, TeamSerializer, ScoreSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from datetime import datetime
-
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authtoken.models import Token
 
 # Create your views here.
 def index(request):
@@ -29,6 +27,10 @@ def index(request):
     return render(request, 'ratbot/home.html', {
         'test': "Testing"
     })
+
+
+def api_info(request):
+    return render(request, 'ratbot/api-info.html')
 
 
 auth_url_discord = "https://discord.com/api/oauth2/authorize?client_id=1039941503423889548&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Fapi%2Foauth2%2Flogin%2Fredirect&response_type=code&scope=identify"
@@ -215,8 +217,13 @@ class ResultsRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
 from django.utils import timezone
 
-
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 @csrf_exempt
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def ratbot_results_api(request):
     if request.method != 'POST':
         return JsonResponse({'error': 'Invalid request method'})
@@ -347,21 +354,6 @@ def ratbot_results_api(request):
     return JsonResponse({'success': 'Result saved successfully'})
 
 
-class MembershipViewSet(viewsets.ModelViewSet):
-    queryset = Membership.objects.all()
-    serializer_class = MembershipSerializer
-    http_method_names = ['get']
-
-
-class ServerViewSet(viewsets.ModelViewSet):
-    queryset = Server.objects.all()
-    serializer_class = ServerSerializer
-    http_method_names = ['get']
-
-
-from django.db.models import Prefetch
-
-
 class ResultViewSet(viewsets.ModelViewSet):
     queryset = Result.objects.all()
     serializer_class = ResultSerializer
@@ -386,37 +378,16 @@ class ResultViewSet(viewsets.ModelViewSet):
 
 
 class TeamViewSet(viewsets.ModelViewSet):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
     http_method_names = ['get']
 
 
-class ScoreViewSet(viewsets.ModelViewSet):
-    queryset = Score.objects.all()
-    serializer_class = ScoreSerializer
-    http_method_names = ['get']
-
-
-class MembershipList(generics.ListCreateAPIView):
-    queryset = Membership.objects.all()
-    serializer_class = MembershipSerializer
-
-
-class MembershipDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Membership.objects.all()
-    serializer_class = MembershipSerializer
-
-
-class ServerList(generics.ListCreateAPIView):
-    queryset = Server.objects.all()
-    serializer_class = ServerSerializer
-
-
-class ServerDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Server.objects.all()
-    serializer_class = ServerSerializer
-
 class TeamList(generics.ListCreateAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
 
@@ -426,17 +397,9 @@ class TeamDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TeamSerializer
 
 
-class ScoreList(generics.ListCreateAPIView):
-    queryset = Score.objects.all()
-    serializer_class = ScoreSerializer
-
-
-class ScoreDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Score.objects.all()
-    serializer_class = ScoreSerializer
-
-
 class CodashopView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     def get(self, request, format=None):
         today = timezone.now().date()
         results = Result.objects.filter(date_played=today)
@@ -448,4 +411,44 @@ class CodashopView(APIView):
             response_data[i]['scores'] = serializer.data
         return Response(response_data)
 
+
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def my_account(request):
+    user = request.user
+    discord_username = user.socialaccount_set.get(provider='discord').extra_data['username']
+    try:
+        token = Token.objects.get(user=user)
+    except:
+        token = ""
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        user.username = username
+        user.save()
+
+    return render(request, 'ratbot/my_account.html', {'user': user, 'discord_username': discord_username, 'token': token})
+
+@csrf_exempt
+@login_required
+def generate_token(request):
+    user = request.user
+    token = Token.objects.get_or_create(user=user)
+    pprint(token)
+    return redirect('/my_account', success='Token generated successfully')
+@csrf_exempt
+@login_required
+def delete_token(request):
+    try:
+        user = request.user
+        token = Token.objects.get(user=user)
+        pprint(token)
+        token.delete()
+        pprint(token)
+        print("Record deleted successfully!")
+    except:
+        print("Record doesn't exists")
+
+    return redirect('/my_account', success='Token deleted successfully')
 

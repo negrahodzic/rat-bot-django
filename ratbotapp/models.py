@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.db import models
 from django.utils.text import slugify
 
+from ratbotwebsite import settings
 from .managers import DiscordUserOAuth2Manager
 
 
@@ -131,3 +132,12 @@ class Slot(models.Model):
 
 
 # OLD: scrim = models.ForeignKey(Scrim, on_delete=models.CASCADE)
+
+from django.db import models
+from django.contrib.auth.models import User
+
+# class Token(models.Model):
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     key = models.CharField(max_length=40, unique=True)
+#     created = models.DateTimeField(auto_now_add=True)
+

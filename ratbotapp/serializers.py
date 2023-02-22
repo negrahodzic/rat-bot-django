@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from .models import Membership, Server, Result, Team, Score
 
-
 class MembershipSerializer(serializers.ModelSerializer):
     class Meta:
         model = Membership
@@ -36,3 +35,4 @@ class ResultSerializer(serializers.ModelSerializer):
     class Meta:
         model = Result
         fields = ['id', 'guild_id', 'guild_name', 'generated_by', 'scrim_name', 'date_played', 'time_played', 'scores']
+

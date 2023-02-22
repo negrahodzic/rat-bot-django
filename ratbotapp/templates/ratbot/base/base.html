@@ -11,15 +11,15 @@
     <link rel="stylesheet" href="{% static 'ratbot/styles/base.css' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.6.3.slim.js"
-            integrity="sha256-DKU1CmJ8kBuEwumaLuh9Tl/6ZB6jzGOBV/5YpNE2BWc="
-            crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.2/css/jquery.dataTables.css">
     <script type="text/javascript" charset="utf8"
             src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.js"></script>
     </script>
     <script src="{% static 'ratbot/scripts/scripts.js' %}"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+          integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
     {% block additional_cdn %}{% endblock %}
 </head>
 <body>
@@ -48,6 +48,12 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'statistics' %}">Statistics</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'api-info' %}">API</a>
+                </li>
+                <li class="nav-item">
+                    <a  class="nav-link" href="{% url 'my_account' %}">My Account</a>
+                </li>
             </ul>
             {% if user.is_authenticated %}
             <span class="text-light welcome">Welcome, {{ user.username }}!</span>
@@ -63,7 +69,7 @@
 
 <div class="gradient-footer mt-5">
     <footer class="mt-3 py-3 px-3">
-        <div class="row justify-content-center align-items-center" >
+        <div class="row justify-content-center align-items-center">
             <div class="col-sm-12 col-md-6 mb-3 mb-md-0 text-center">
                 <a href="/"><img src="{% static 'ratbot/images/logo.png' %}" alt="Rat Bot" height="30"></a> © 2022
                 Developer of Rat's Scrim Bot#6575

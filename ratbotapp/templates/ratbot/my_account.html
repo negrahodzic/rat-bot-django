@@ -1,0 +1,33 @@
+{% extends 'ratbot/base/base.html' %}
+
+{% load static %}
+{% block body %}
+<div class="container center-account mt-3">
+    <div class="row">
+        <div class="text-center mt-2 mb-2 gradient p-4">
+            <h1>Account Information</h1>
+            <form method="POST">
+                {% csrf_token %}
+                <p><strong>Username:</strong>
+                    <input type="text" name="username" value="{{ user.username }}">
+                </p>
+                <button type="submit" class="btn btn-primary mb-2">Save Changes</button>
+            </form>
+            <p class="mt-2"><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Discord Username:</strong> {{ discord_username }}</p>
+            {% if token %}
+            <p><strong>API Token:</strong> {{ token.key }}</p>
+            <form method="POST" action="{% url 'delete_token' %}">
+                <button type="submit" name="delete_token" class="btn btn-primary">Delete Token</button>
+            </form>
+            {% else %}
+            <form method="POST" action="{% url 'generate_token' %}">
+                <button type="submit" name="generate_token" class="btn btn-primary">Generate New Token</button>
+            </form>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -50,6 +50,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.discord',
     'rest_framework',
+    'rest_framework_simplejwt',
+    'rest_framework.authtoken',
+
 ]
 
 MIDDLEWARE = [
@@ -155,4 +158,15 @@ SOCIALACCOUNT_PROVIDERS = {
         "redirect_uri": str(BASE_DIR) + "/api/oauth2/login/redirect"
     }
 }
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication"
+    ),
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticated"
+    )
+}
+
 
