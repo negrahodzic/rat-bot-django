@@ -28,7 +28,7 @@ def index(request):
         'test': "Testing"
     })
 
-
+@login_required(login_url="/accounts/discord/login")
 def api_info(request):
     return render(request, 'ratbot/api-info.html')
 
@@ -414,7 +414,7 @@ class CodashopView(APIView):
 
 from django.contrib.auth.decorators import login_required
 
-@login_required
+@login_required(login_url="/accounts/discord/login")
 def my_account(request):
     user = request.user
     discord_username = user.socialaccount_set.get(provider='discord').extra_data['username']
@@ -431,14 +431,14 @@ def my_account(request):
     return render(request, 'ratbot/my_account.html', {'user': user, 'discord_username': discord_username, 'token': token})
 
 @csrf_exempt
-@login_required
+@login_required(login_url="/accounts/discord/login")
 def generate_token(request):
     user = request.user
     token = Token.objects.get_or_create(user=user)
     pprint(token)
     return redirect('/my_account', success='Token generated successfully')
 @csrf_exempt
-@login_required
+@login_required(login_url="/accounts/discord/login")
 def delete_token(request):
     try:
         user = request.user
