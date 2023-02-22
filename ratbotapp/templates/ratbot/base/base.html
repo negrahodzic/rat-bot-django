@@ -51,9 +51,11 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'api-info' %}">API</a>
                 </li>
+                {% if user.is_authenticated %}
                 <li class="nav-item">
                     <a  class="nav-link" href="{% url 'my_account' %}">My Account</a>
                 </li>
+                {% endif %}
             </ul>
             {% if user.is_authenticated %}
             <span class="text-light welcome">Welcome, {{ user.username }}!</span>
