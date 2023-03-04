@@ -127,10 +127,71 @@ def login_btn(request: HttpRequest):
 def teams(request):
     print("======== STARTED teams() =======")
     data = Team.objects.all()
+
     return render(request, 'ratbot/teams.html', {
         'teams': data
     })
 
+@csrf_exempt
+@login_required(login_url="/accounts/discord/login")
+def team_detail(request, pk):
+    print("======== STARTED team_detail() =======")
+    team = get_object_or_404(Team, pk=pk)
+    followers = team.followers.all()
+    # pprint(followers)
+    # pprint(len(followers))
+
+    stats = Score.objects.filter(tp__gte=0).order_by('-tp').select_related('result')[:3]
+
+    # result = Result.objects.filter(id=id)
+    # result = get_object_or_404(Score, team=team)
+    scores = Score.objects.filter(team=team).order_by('rank')
+    total_kills = 0
+    missed_games = 0
+    for score in scores:
+        total_kills += score.kp
+        missed_games += score.missed_games
+
+    max_kills = scores.filter(kp__gte=0).order_by('-kp')[:1][0].kp
+    max_points = scores.filter(tp__gte=0).order_by('-tp')[:1][0].tp
+    wins = scores.filter(rank=1)
+
+    missed_games = 0
+
+
+    context = {
+        'team': team,
+        'stats': {
+            'followers': len(followers),
+            'total_scrims': len(scores),
+            'max_kills': max_kills,
+            'max_points': max_points,
+            'total_wins': len(wins),
+            'total_kills': total_kills,
+            'missed_games': missed_games
+        },
+        'scores': scores,
+    }
+
+    pprint(context)
+
+    return render(request, 'ratbot/team_detail.html', context)
+
+@csrf_exempt
+@login_required(login_url="/accounts/discord/login")
+def follow_team(request, team_id):
+    team = get_object_or_404(Team, id=team_id)
+    team.followers.add(request.user)
+    return redirect('team_detail', pk=team.id)
+    # return redirect('/teams/<ink:team_id>', team_id=team.id)
+
+@csrf_exempt
+@login_required(login_url="/accounts/discord/login")
+def unfollow_team(request, team_id):
+    team = get_object_or_404(Team, id=team_id)
+    team.followers.remove(request.user)
+    return redirect('team_detail', pk=team.id)
+    # return redirect('/teams/<ink:team_id>', team_id=team.id)
 
 # @csrf_protect
 @csrf_exempt
@@ -144,7 +205,8 @@ def leaderboards_page(request):
         'results': results
     })
 
-
+@csrf_exempt
+@login_required(login_url="/accounts/discord/login")
 def results_detail(request, pk):
     print("======== STARTED result() =======")
     # result = Result.objects.filter(id=id)
@@ -451,4 +513,3 @@ def delete_token(request):
         print("Record doesn't exists")
 
     return redirect('/my_account', success='Token deleted successfully')
-

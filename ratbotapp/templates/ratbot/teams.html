@@ -28,7 +28,7 @@
             {% for team in teams %}
             <tr style="color:white;">
                 <!--            <td class="dt-center"><a href="% url 'team_detail' result.pk %}">{{ team.team_name }}</a></td>-->
-                <td class="dt-center" style="color:white;">{{ team.team_name }}</td>
+                <td class="dt-center" style="color:white;"><a href="{% url 'team_detail' team.pk %}">{{ team.team_name }}</a></td>
                 <td class="dt-center" style="color:white;">{{ team.team_tag }}</td>
             </tr>
             {% endfor %}

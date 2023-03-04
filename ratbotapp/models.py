@@ -87,12 +87,15 @@ class Result(models.Model):
             self.date_played = timezone.now().date()
         super().save(*args, **kwargs)
 
+from django.contrib.auth.models import User
 
 class Team(models.Model):
     id = models.AutoField(primary_key=True)
     team_name = models.CharField(max_length=30, unique=True)
     team_tag = models.CharField(max_length=10, default="")
     team_slug = models.CharField(max_length=60, unique=False, editable=False)
+    team_image = models.ImageField(upload_to='team_images/', null=True, blank=True)
+    followers = models.ManyToManyField(User, related_name='following')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -119,7 +122,7 @@ class Score(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"#{self.rank} - {self.team.team_name} - {self.tp}"
+        return f"#{self.rank} - {self.team.team_name} - {self.pp} - {self.kp} - {self.tp}"
 
 
 class Scrim(models.Model):
@@ -140,4 +143,3 @@ from django.contrib.auth.models import User
 #     user = models.OneToOneField(User, on_delete=models.CASCADE)
 #     key = models.CharField(max_length=40, unique=True)
 #     created = models.DateTimeField(auto_now_add=True)
-

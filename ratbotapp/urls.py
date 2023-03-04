@@ -22,6 +22,10 @@ urlpatterns = [
     path('', views.index, name='home'),
     path('api', views.api_info, name='api-info'),
     path('teams', views.teams, name='teams'),
+    path('teams/<int:pk>', views.team_detail, name='team_detail'),
+    path('teams/<int:team_id>/follow/', views.follow_team, name='follow_team'),
+    path('teams/<int:team_id>/unfollow/', views.unfollow_team, name='unfollow_team'),
+
     path('leaderboards', views.leaderboards_page, name='leaderboards'),
     path('results/<int:pk>', views.results_detail, name='results_detail'),
     path('my_account/', views.my_account, name='my_account'),

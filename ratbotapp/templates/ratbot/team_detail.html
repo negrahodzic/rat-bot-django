@@ -1,0 +1,96 @@
+{% extends 'ratbot/base/base.html' %}
+
+{% load static %}
+
+{% block additional_cdn %}
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="gradient-2 p-3 mt-4 mb-3">
+        <div class="row mt-3 mb-3">
+            <div class="col-6">
+                {% if team.team_image %}
+                    <img class="team-image" style="height:200px;width:200px;border-radius:50%;margin: 0 auto;display: block;border: 5px solid #040612;box-shadow: 0 0 20px #003366;" src="{{ team.team_image.url }}" alt="{{ team.team_name }}">
+                {% else %}
+                    <img class="team-image" style="height:200px;width:200px;border-radius:50%;margin: 0 auto;display: block;border: 5px solid #040612;box-shadow: 0 0 20px #003366;"  src="{% static 'ratbot/images/default_team_image.png' %}" alt="{{ team.team_name }}">
+                {% endif %}
+            </div>
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-6">
+                        <p>Heighest score: {{ stats.max_points }}</p>
+                        <p>Total kills: {{ stats.total_kills }}</p>
+                        <p>Most kills: {{ stats.max_kills }}</p>
+                    </div>
+                    <div class="col-6">
+                        <p>Total scrims: {{ stats.total_scrims }}</p>
+                        <p>Total wins: {{ stats.total_wins }}</p>
+                        <p>Missed games: {{ stats.missed_games }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6 text-center">
+                <h2>{{team.team_name}} | {{team.team_tag}}</h2>
+            </div>
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-5">
+                        <h3>Followers: {{stats.followers}}</h3>
+                    </div>
+                    <div class="col-3">
+                        <form method="POST" action="{% url 'follow_team' team.id %}">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-primary">Follow</button>
+                        </form>
+                    </div>
+                    <div class="col-3">
+                        <form method="POST" action="{% url 'unfollow_team' team.id %}">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-primary">Unfollow</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="gradient-2 p-3 mt-2">
+    <table id="team_detail" class="table table-striped display">
+            <thead class="gradient" style="color:white;">
+            <tr>
+                <th scope="col" class="dt-center">Server</th>
+                <th scope="col" class="dt-center">Scrim name</th>
+                <th scope="col" class="dt-center">Rank</th>
+                <th scope="col" class="dt-center">Placement</th>
+                <th scope="col" class="dt-center">Kills</th>
+                <th scope="col" class="dt-center">Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for score in scores %}
+            <tr>
+                <td class="dt-center" style="color:white;">{{ score.result.server.guild_name}}</td>
+                <td class="dt-center" style="color:white;">{{ score.result.scrim_name}}</td>
+                <td class="dt-center" style="color:white;">{{ score.rank }}</td>
+                <td class="dt-center" style="color:white;">{{ score.pp }}</td>
+                <td class="dt-center" style="color:white;">{{ score.kp }}</td>
+                <td class="dt-center" style="color:white;">{{ score.tp }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% block additional_scripts %}
+    <script>
+    $(document).ready(function() {
+        $('#team_detail').DataTable();
+    });
+
+    </script>
+    {% endblock %}
+
+</div>
+{% endblock %}
