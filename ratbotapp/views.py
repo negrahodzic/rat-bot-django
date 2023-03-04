@@ -21,12 +21,14 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 
+
 # Create your views here.
 def index(request):
     # return HttpResponse("Hello, world. You're at the polls index.")
     return render(request, 'ratbot/home.html', {
         'test': "Testing"
     })
+
 
 @login_required(login_url="/accounts/discord/login")
 def api_info(request):
@@ -132,6 +134,7 @@ def teams(request):
         'teams': data
     })
 
+
 @csrf_exempt
 @login_required(login_url="/accounts/discord/login")
 def team_detail(request, pk):
@@ -158,17 +161,25 @@ def team_detail(request, pk):
 
     missed_games = 0
 
+    total_scrims = len(scores)
+
+    average_kills_per_scrim = round(total_kills / total_scrims)
+
+    average_kills_per_round = round(average_kills_per_scrim / 4)
 
     context = {
         'team': team,
         'stats': {
+            'following': True if request.user in followers else False,
             'followers': len(followers),
-            'total_scrims': len(scores),
+            'total_scrims': total_scrims,
             'max_kills': max_kills,
             'max_points': max_points,
             'total_wins': len(wins),
             'total_kills': total_kills,
-            'missed_games': missed_games
+            'missed_games': missed_games,
+            'average_kills_per_scrim': average_kills_per_scrim,
+            'average_kills_per_round': average_kills_per_round
         },
         'scores': scores,
     }
@@ -176,6 +187,7 @@ def team_detail(request, pk):
     pprint(context)
 
     return render(request, 'ratbot/team_detail.html', context)
+
 
 @csrf_exempt
 @login_required(login_url="/accounts/discord/login")
@@ -185,6 +197,7 @@ def follow_team(request, team_id):
     return redirect('team_detail', pk=team.id)
     # return redirect('/teams/<ink:team_id>', team_id=team.id)
 
+
 @csrf_exempt
 @login_required(login_url="/accounts/discord/login")
 def unfollow_team(request, team_id):
@@ -193,29 +206,34 @@ def unfollow_team(request, team_id):
     return redirect('team_detail', pk=team.id)
     # return redirect('/teams/<ink:team_id>', team_id=team.id)
 
+
 # @csrf_protect
 @csrf_exempt
 @login_required(login_url="/accounts/discord/login")
 # @login_required(login_url="/accounts/login")
-def leaderboards_page(request):
-    print("======== STARTED leaderboards_page() =======")
+def scrims_page(request):
+    print("======== STARTED scrims_page() =======")
     print(str(BASE_DIR) + "/api/oauth2/login/redirect")
     results = Result.objects.all()
-    return render(request, 'ratbot/leaderboards.html', {
+    return render(request, 'ratbot/scrims.html', {
         'results': results
     })
 
+
 @csrf_exempt
 @login_required(login_url="/accounts/discord/login")
-def results_detail(request, pk):
-    print("======== STARTED result() =======")
-    # result = Result.objects.filter(id=id)
+def scrim_detail(request, pk):
     result = get_object_or_404(Result, pk=pk)
     scores = Score.objects.filter(result_id=result.id).order_by('rank')
-    context = {'result': result, 'scores': scores}
-    pprint(result)
-    pprint(scores)
-    return render(request, 'ratbot/results_detail.html', context)
+
+    pprint(result.server)
+
+    context = {
+        'result': result,
+        'scores': scores
+    }
+
+    return render(request, 'ratbot/scrim_detail.html', context)
 
 
 @login_required(login_url="/accounts/discord/login")
@@ -282,6 +300,8 @@ from django.utils import timezone
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+
+
 @csrf_exempt
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
@@ -462,6 +482,7 @@ class TeamDetail(generics.RetrieveUpdateDestroyAPIView):
 class CodashopView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
+
     def get(self, request, format=None):
         today = timezone.now().date()
         results = Result.objects.filter(date_played=today)
@@ -475,6 +496,7 @@ class CodashopView(APIView):
 
 
 from django.contrib.auth.decorators import login_required
+
 
 @login_required(login_url="/accounts/discord/login")
 def my_account(request):
@@ -490,7 +512,9 @@ def my_account(request):
         user.username = username
         user.save()
 
-    return render(request, 'ratbot/my_account.html', {'user': user, 'discord_username': discord_username, 'token': token})
+    return render(request, 'ratbot/my_account.html',
+                  {'user': user, 'discord_username': discord_username, 'token': token})
+
 
 @csrf_exempt
 @login_required(login_url="/accounts/discord/login")
@@ -499,6 +523,8 @@ def generate_token(request):
     token = Token.objects.get_or_create(user=user)
     pprint(token)
     return redirect('/my_account', success='Token generated successfully')
+
+
 @csrf_exempt
 @login_required(login_url="/accounts/discord/login")
 def delete_token(request):

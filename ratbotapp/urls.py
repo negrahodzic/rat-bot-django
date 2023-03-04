@@ -25,9 +25,8 @@ urlpatterns = [
     path('teams/<int:pk>', views.team_detail, name='team_detail'),
     path('teams/<int:team_id>/follow/', views.follow_team, name='follow_team'),
     path('teams/<int:team_id>/unfollow/', views.unfollow_team, name='unfollow_team'),
-
-    path('leaderboards', views.leaderboards_page, name='leaderboards'),
-    path('results/<int:pk>', views.results_detail, name='results_detail'),
+    path('scrims', views.scrims_page, name='scrims'),
+    path('scrims/<int:pk>', views.scrim_detail, name='scrim_detail'),
     path('my_account/', views.my_account, name='my_account'),
     path('my_account/generate_token/', views.generate_token, name='generate_token'),
     path('my_account/delete_token/', views.delete_token, name='delete_token'),

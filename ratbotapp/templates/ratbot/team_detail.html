@@ -19,11 +19,13 @@
             <div class="col-6">
                 <div class="row">
                     <div class="col-6">
-                        <p>Heighest score: {{ stats.max_points }}</p>
                         <p>Total kills: {{ stats.total_kills }}</p>
                         <p>Most kills: {{ stats.max_kills }}</p>
+                        <p>Average kills per scrim: {{ stats.average_kills_per_scrim }}</p>
+                        <p>Average kills per round: {{ stats.average_kills_per_round }}</p>
                     </div>
                     <div class="col-6">
+                        <p>Heighest score: {{ stats.max_points }}</p>
                         <p>Total scrims: {{ stats.total_scrims }}</p>
                         <p>Total wins: {{ stats.total_wins }}</p>
                         <p>Missed games: {{ stats.missed_games }}</p>
@@ -42,16 +44,20 @@
                         <h3>Followers: {{stats.followers}}</h3>
                     </div>
                     <div class="col-3">
-                        <form method="POST" action="{% url 'follow_team' team.id %}">
-                          {% csrf_token %}
-                          <button type="submit" class="btn btn-primary">Follow</button>
-                        </form>
+                        {% if stats.following %}
+                            <form method="POST" action="{% url 'unfollow_team' team.id %}">
+                              {% csrf_token %}
+                              <button type="submit" class="btn btn-primary">Unfollow</button>
+                            </form>
+                        {% else %}
+                            <form method="POST" action="{% url 'follow_team' team.id %}">
+                              {% csrf_token %}
+                              <button type="submit" class="btn btn-primary">Follow</button>
+                            </form>
+                        {% endif %}
                     </div>
                     <div class="col-3">
-                        <form method="POST" action="{% url 'unfollow_team' team.id %}">
-                          {% csrf_token %}
-                          <button type="submit" class="btn btn-primary">Unfollow</button>
-                        </form>
+
                     </div>
                 </div>
             </div>

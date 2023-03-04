@@ -26,7 +26,7 @@
         <tr>
             <th scope="row" class="dt-center" style="color:white;">{{ result.pk }}</th>
             <td class="dt-center" style="color:white;">{{ result.server.guild_name }}</td>
-            <td class="dt-center" style="color:white;"><a href="{% url 'results_detail' result.pk %}">{{ result.scrim_name }}</a></td>
+            <td class="dt-center" style="color:white;"><a href="{% url 'scrim_detail' result.pk %}">{{ result.scrim_name }}</a></td>
             <td class="dt-center" style="color:white;">{{ result.get_scrim_type.label }}</td>
             <td class="dt-center" style="color:white;">{{ result.date_played }}</td>
         </tr>

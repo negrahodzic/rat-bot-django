@@ -1,0 +1,68 @@
+{% extends 'ratbot/base/base.html' %}
+
+{% load static %}
+
+{% block additional_cdn %}
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="gradient-2 p-3 mt-3">
+        <div class="row mt-3 mb-3">
+            <div class="col-5">
+                {% if result.server.profile_image %}
+                <img class="team-image"
+                     style="height:150px;width:150px;border-radius:50%;margin: 0 auto;display: block;border: 5px solid #040612;box-shadow: 0 0 20px #003366;"
+                     src="{{ result.server.profile_image.url }}" alt="{{ result.server.guild_name }}">
+                {% else %}
+                <img class="team-image"
+                     style="height:150px;width:150px;border-radius:50%;margin: 0 auto;display: block;border: 5px solid #040612;box-shadow: 0 0 20px #003366;"
+                     src="{% static 'ratbot/images/default_team_image.png' %}" alt="{{ result.server.guild_name }}">
+                {% endif %}
+            </div>
+            <div class="col-7 text-center">
+                <h2>{{ result.scrim_name }}</h2>
+                <h3>{{ result.time_played }} CET | {{ result.date_played }}</h3>
+                <h4>Type : {{ result.get_scrim_type.label }}</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5 text-center">
+                <h2>{{ result.server.guild_name }}</h2>
+            </div>
+            <div class="col-7 text-center">
+                <a class="discord-invite" href="{{ result.server.invite_link }}">JOIN SERVER!</a>
+            </div>
+        </div>
+    </div>
+    <div class="gradient-2 p-3 mt-2">
+        <table id="results_detail" class="table table-striped display">
+            <thead class="gradient" style="color:white;">
+            <tr>
+                <th scope="col" class="dt-center">Rank</th>
+                <th scope="col" class="dt-center">Team name</th>
+                <th scope="col" class="dt-center">Total points</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for score in scores %}
+            <tr>
+                <th scope="row" class="dt-center" style="color:white;">{{ score.rank }}</th>
+                <td class="dt-center" style="color:white;">{{ score.team.team_name }}</td>
+                <td class="dt-center" style="color:white;">{{ score.tp }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% block additional_scripts %}
+    <script>
+        $(document).ready(function () {
+            $('#results_detail').DataTable();
+        });
+
+    </script>
+    {% endblock %}
+
+</div>
+{% endblock %}

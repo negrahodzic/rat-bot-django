@@ -44,6 +44,8 @@ class Server(models.Model):
     membership_start_date = models.DateTimeField(null=True, blank=True)
     membership_end_date = models.DateTimeField(null=True, blank=True)
     profile_image = models.ImageField(upload_to='server_images/', null=True, blank=True)
+    invite_link = models.CharField(default="", max_length=100)
+    members = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
