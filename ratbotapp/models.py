@@ -105,7 +105,8 @@ class Team(models.Model):
         return f"{self.team_name} | {self.team_tag}"
 
     def save(self, *args, **kwargs):
-        self.team_slug = f"{slugify(self.team_name.strip().lower())}-{slugify(self.team_tag.strip().lower())}"
+        self.team_slug = f"{slugify(self.team_name.strip().lower())}" \
+                         f"-{slugify(self.team_tag.strip().lower())}"
         super().save(*args, **kwargs)
 
 
