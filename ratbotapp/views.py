@@ -13,14 +13,14 @@ from rest_framework.utils import json
 from ratbotwebsite.settings import BASE_DIR
 from rest_framework import viewsets
 
-from .models import Server, Result, Team, Score
+from .models import Server, Result, Team, Score, UserProfile
 from .serializers import ResultSerializer, TeamSerializer, ScoreSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
 def index(request):
@@ -127,13 +127,51 @@ def login_btn(request: HttpRequest):
 @csrf_exempt
 @login_required(login_url="/accounts/discord/login")
 def teams(request):
-    print("======== STARTED teams() =======")
-    data = Team.objects.all()
+    search_query = request.GET.get('search', '')
+    page_number = request.GET.get('page', 1)
+    sort_by = request.GET.get('sort_by', 'team_name')
+
+    data = Team.objects.filter(team_name__icontains=search_query).order_by(sort_by) | \
+           Team.objects.filter(team_tag__icontains=search_query).order_by(sort_by)
+
+    if sort_by == 'followers':
+        data = sorted(data, key=lambda team: len(get_team_followers(team)), reverse=True)
+
+    try:
+        paginator = Paginator(data, 6)
+
+        teams_page = paginator.page(page_number)
+
+        teams_with_followers = {}
+
+        counter = 0
+        for team in teams_page:
+            followers = get_team_followers(team)
+
+            teams_with_followers[counter] = {
+                "team": team,
+                "followers": len(followers)
+            }
+
+            counter += 1
+
+    except PageNotAnInteger:
+        teams_page = paginator.page(1)
+    except: # Za svaki slucaj, dodaj posle jos mogucih izuzetaka
+        teams_page = paginator.page(1)
 
     return render(request, 'ratbot/teams.html', {
-        'teams': data
+        'teams': teams_with_followers,
+        'paginator': teams_page,
+        'search_query': search_query,
+        'sort_by': sort_by
     })
 
+
+def get_team_followers(team):
+    followers = team.followers.all()
+
+    return followers
 
 @csrf_exempt
 @login_required(login_url="/accounts/discord/login")
@@ -235,9 +273,40 @@ def scrim_detail(request, pk):
 
     return render(request, 'ratbot/scrim_detail.html', context)
 
-
 @login_required(login_url="/accounts/discord/login")
 def statistics_page(request):
+    print("======== STARTED statistics_page() =======")
+
+    top_stats = Score.objects.filter(tp__gte=0).order_by('-tp').select_related('result')[:10]
+
+    # Get all teams
+    all_teams = Team.objects.all()
+
+    # Calculate the number of followers for each team and sort them
+    teams_with_followers = [{
+        "team": team,
+        "followers": len(get_team_followers(team))
+    } for team in all_teams]
+
+    sorted_teams_with_followers = sorted(teams_with_followers, key=lambda x: x["followers"], reverse=True)
+
+    # Get top 5 teams by number of followers
+    top_followers = sorted_teams_with_followers[:10]
+
+    context = {
+        'statistics': {
+            'top_stats': top_stats,
+        },
+        'popular_teams': top_followers,
+    }
+
+    pprint(context)
+
+    return render(request, 'ratbot/statistics.html', context)
+
+
+@login_required(login_url="/accounts/discord/login")
+def statistics_page2(request):
     print("======== STARTED statistics_page() =======")
     # results = Result.objects.all()
     #
@@ -501,16 +570,26 @@ from django.contrib.auth.decorators import login_required
 @login_required(login_url="/accounts/discord/login")
 def my_account(request):
     user = request.user
+    pprint(type(user))
     discord_username = user.socialaccount_set.get(provider='discord').extra_data['username']
     try:
         token = Token.objects.get(user=user)
     except:
         token = ""
 
+    # Create a UserProfile if it doesn't exist
+    user_profile, created = UserProfile.objects.get_or_create(user=user)
+
     if request.method == 'POST':
         username = request.POST.get('username')
         user.username = username
         user.save()
+        # Update UserProfile fields
+        user.userprofile.bio = request.POST.get('bio')
+        user.userprofile.game_username = request.POST.get('game_username')
+        user.userprofile.game_id = request.POST.get('game_id')
+        user.userprofile.save()
+        pprint(user.userprofile.bio)
 
     return render(request, 'ratbot/my_account.html',
                   {'user': user, 'discord_username': discord_username, 'token': token})

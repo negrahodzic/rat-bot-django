@@ -2,32 +2,77 @@
 
 {% load static %}
 {% block body %}
-<div class="container center-account mt-3">
+<style>
+    .readonly-input {
+        background-color: #D1CCD1;
+        border-color: #cccccc;
+    }
+
+    .readonly-input:focus {
+        outline: none;
+        box-shadow: none;
+        background-color: #D1CCD1;
+        border-color: #cccccc;
+    }
+</style>
+<div class="container mt-3">
     <div class="row">
-        <div class="text-center mt-2 mb-2 gradient p-4">
+        <div class="col-12 text-center mt-2 mb-4">
             <h1>Account Information</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
             <form method="POST">
                 {% csrf_token %}
-                <p><strong>Username:</strong>
-                    <input type="text" name="username" value="{{ user.username }}">
-                </p>
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username:</label>
+                    <input type="text" class="form-control" name="username" value="{{ user.username }}" id="username">
+                </div>
+                <div class="mb-3">
+                    <label for="bio" class="form-label">Bio:</label>
+                    <textarea class="form-control" name="bio" id="bio">{{ user.userprofile.bio }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="game_username" class="form-label">Game Username:</label>
+                    <input type="text" class="form-control" name="game_username"
+                           value="{{ user.userprofile.game_username }}" id="game_username">
+                </div>
+                <div class="mb-3">
+                    <label for="game_id" class="form-label">Game ID:</label>
+                    <input type="text" class="form-control" name="game_id" value="{{ user.userprofile.game_id }}"
+                           id="game_id">
+                </div>
                 <button type="submit" class="btn btn-primary mb-2">Save Changes</button>
             </form>
-            <p class="mt-2"><strong>Email:</strong> {{ user.email }}</p>
-            <p><strong>Discord Username:</strong> {{ discord_username }}</p>
-            {% if token %}
-            <p><strong>API Token:</strong> {{ token.key }}</p>
-            <form method="POST" action="{% url 'delete_token' %}">
-                <button type="submit" name="delete_token" class="btn btn-primary">Delete Token</button>
-            </form>
-            {% else %}
-            <form method="POST" action="{% url 'generate_token' %}">
-                <button type="submit" name="generate_token" class="btn btn-primary">Generate New Token</button>
-            </form>
-            {% endif %}
-
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-8 offset-md-2">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="text" class="form-control readonly-input" name="email" value="{{ user.email }}" id="email"
+                       readonly>
+            </div>
+            <div class="mb-3">
+                <label for="discord_username" class="form-label">Discord Username:</label>
+                <input type="text" class="form-control readonly-input" name="discord_username"
+                       value="{{ discord_username }}" id="discord_username" readonly>
+            </div>
         </div>
     </div>
 </div>
 
 {% endblock %}
+
+
+<!--            {% if token %}-->
+<!--            <p><strong>API Token:</strong> {{ token.key }}</p>-->
+<!--            <form method="POST" action="{% url 'delete_token' %}">-->
+<!--                <button type="submit" name="delete_token" class="btn btn-primary">Delete Token</button>-->
+<!--            </form>-->
+<!--            {% else %}-->
+<!--            <form method="POST" action="{% url 'generate_token' %}">-->
+<!--                <button type="submit" name="generate_token" class="btn btn-primary">Generate New Token</button>-->
+<!--            </form>-->
+<!--            {% endif %}-->

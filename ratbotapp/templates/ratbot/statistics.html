@@ -6,12 +6,25 @@
 {% endblock %}
 
 {% block body %}
-<div class="container">
-    <div class="row mb-3 mt-4">
-        <h3 class="text-center">Statistics by Rat Bot</h3>
-    </div>
-    <div class="container">
+<style>
+    .team-card h4 {
+        margin-bottom: 5px;
+    }
+
+    .team-card p {
+        margin-bottom: 0;
+    }
+</style>
+<div class="container mt-3">
+    <div class="container mt-4">
+        <div class="row mb-1 mt-4">
+            <h3 class="text-center">Statistics by Rat Bot</h3>
+        </div>
         <div class="row">
+            <div class="col-12 mt-2">
+                <h5 class="top-3-teams gradient"><i class="fa-solid fa-caret-down" style="margin-right: 30px;"></i>TOP 3
+                    Teams by Total points<i class="fa-solid fa-caret-down" style="margin-left: 30px;"></i></h5>
+            </div>
             <div class="col-4">
                 <div class="rectangle gold"><p class="rectangle-content">#1</p></div>
                 <h5 class="team-name">{{ statistics.top_stats.0.team.team_name }}</h5>
@@ -27,11 +40,58 @@
                 <h5 class="team-name">{{ statistics.top_stats.2.team.team_name }}</h5>
                 <p class="team-text">Total Points: {{ statistics.top_stats.2.tp }}</p>
             </div>
-            <div class="col-12">
-                <h5 class="top-3-teams gradient"><i class="fa-solid fa-caret-up" style="margin-right: 30px;"></i>TOP 3 TEAMS<i class="fa-solid fa-caret-up" style="margin-left: 30px;"></i></h5>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-1 p-2">
+    <div class="row mt-3">
+        <div class="col-12">
+            <h5 class="top-3-teams gradient"><i class="fa-solid fa-caret-down" style="margin-right: 30px;"></i>TOP 3
+                Most Popular Teams<i class="fa-solid fa-caret-down" style="margin-left: 30px;"></i></h5>
+        </div>
+    </div>
+     {% for team in popular_teams|slice:"0:3" %}
+    <div class="row mt-1 mx-4">
+        <div class="col-12" style="color: {% if forloop.counter == 1 %}#D4AF36{% elif forloop.counter == 2 %}#C0C0C0{% else %}#CD7F32{% endif %}">
+            <div class="row py-2 border-bottom">
+                <div class="col-1">
+                    <h6>{{ forloop.counter }}.</h6>
+                </div>
+                <div class="col-6">
+                    <h6>{{ team.team.team_name }} ({{ team.team.team_tag }})</h6>
+                </div>
+                <div class="col-3 text-center">
+                    <p>Followers: {{ team.followers }}</p>
+                </div>
+                <div class="col-2">
+                    <a href="{% url 'team_detail' team.team.pk %}" class="btn btn-sm btn-primary" style="width: 100%">See Details</a>
+                </div>
             </div>
         </div>
     </div>
+    {% endfor %}
+    {% for team in popular_teams|slice:"3:10" %}
+    <div class="row mt-1 mx-4">
+        <div class="col-12">
+            <div class="row py-2 border-bottom">
+                <div class="col-1">
+                    <h6>{{ forloop.counter0|add:4 }}.</h6>
+                </div>
+                <div class="col-6">
+                    <h6>{{ team.team.team_name }} ({{ team.team.team_tag }})</h6>
+                </div>
+                <div class="col-3 text-center">
+                    <p>Followers: {{ team.followers }}</p>
+                </div>
+                <div class="col-2">
+                    <a href="{% url 'team_detail' team.team.pk %}" class="btn btn-sm btn-primary" style="width: 100%">See
+                        Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 </div>
 
 {% endblock %}

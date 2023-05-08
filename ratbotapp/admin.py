@@ -1,11 +1,10 @@
 from django.contrib import admin
 
-from .models import Result, Score, DiscordUser, Team, Membership, Server
+from .models import Result, Score, Team, Membership, Server
 
 # Register your models here.
 admin.site.register(Server)
 admin.site.register(Membership)
-admin.site.register(DiscordUser)
 admin.site.register(Result)
 admin.site.register(Score)
 

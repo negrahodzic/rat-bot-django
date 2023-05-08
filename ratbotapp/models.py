@@ -2,31 +2,33 @@ from django.utils import timezone
 
 from django.db import models
 from django.utils.text import slugify
-
-from ratbotwebsite import settings
-from .managers import DiscordUserOAuth2Manager
-
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 # Create your models here.
 
-class DiscordUser(models.Model):
-    objects = DiscordUserOAuth2Manager()
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    # Add your custom fields here
+    bio = models.TextField(blank=True, null=True)
+    game_username = models.CharField(max_length=20, blank=True, null=True)
+    game_id = models.CharField(max_length=15, blank=True, null=True)
 
-    id = models.BigIntegerField(primary_key=True)
-    discord_tag = models.CharField(max_length=100)
-    avatar = models.CharField(max_length=100)
-    public_flags = models.IntegerField()
-    flags = models.IntegerField()
-    locale = models.CharField(max_length=100)
-    mfa_enabled = models.BooleanField()
-    last_login = models.DateTimeField(null=True)
+    def __str__(self):
+        return self.user.username
 
-    def is_authenticated(self, request):
-        return True
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.userprofile.save()
 
 
 class Membership(models.Model):
-    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, unique=True)
     price = models.DecimalField(max_digits=6, decimal_places=2)
     duration = models.DurationField(null=True, blank=True)
@@ -37,7 +39,6 @@ class Membership(models.Model):
         return f"{self.name} - {self.price} euros ({self.duration.days} days)"
 
 class Server(models.Model):
-    id = models.AutoField(primary_key=True)
     guild_id = models.IntegerField(unique=True)
     guild_name = models.CharField(default="", max_length=100)
     membership = models.ForeignKey(Membership, on_delete=models.RESTRICT, null=True)
@@ -54,7 +55,6 @@ class Server(models.Model):
 
 
 class Result(models.Model):
-    id = models.AutoField(primary_key=True)
     generated_by = models.CharField(default="", max_length=100)  # id of person who used %sheet results last
     server = models.ForeignKey(Server, on_delete=models.RESTRICT, default=None)
     scrim_name = models.CharField(default="", max_length=100)
@@ -92,7 +92,6 @@ class Result(models.Model):
 from django.contrib.auth.models import User
 
 class Team(models.Model):
-    id = models.AutoField(primary_key=True)
     team_name = models.CharField(max_length=30, unique=True)
     team_tag = models.CharField(max_length=10, default="")
     team_slug = models.CharField(max_length=60, unique=False, editable=False)
@@ -111,7 +110,6 @@ class Team(models.Model):
 
 
 class Score(models.Model):
-    id = models.AutoField(primary_key=True)
     rank = models.IntegerField(default=0)
     result = models.ForeignKey(Result, on_delete=models.CASCADE, default=None)
     team = models.ForeignKey(Team, on_delete=models.RESTRICT, default=None)
@@ -128,16 +126,12 @@ class Score(models.Model):
         return f"#{self.rank} - {self.team.team_name} - {self.pp} - {self.kp} - {self.tp}"
 
 
-class Scrim(models.Model):
-    pass
-
-
-class Slot(models.Model):
-    pass
-# class Scoreboard/SheetConfig/ResultsConfig(models.Model): ?
-
-
-# OLD: scrim = models.ForeignKey(Scrim, on_delete=models.CASCADE)
+# class Scrim(models.Model):
+#     pass
+#
+#
+# class Slot(models.Model):
+#     pass
 
 from django.db import models
 from django.contrib.auth.models import User
