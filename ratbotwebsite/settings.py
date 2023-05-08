@@ -26,7 +26,8 @@ DEBUG = True
 ALLOWED_HOSTS = [
     # "*",
     'rat-bot.up.railway.app',
-    '127.0.0.1'
+    '127.0.0.1',
+    'rat-bot.com'
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -168,5 +169,3 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated"
     )
 }
-
-
