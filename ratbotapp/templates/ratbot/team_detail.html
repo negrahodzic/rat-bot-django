@@ -9,14 +9,34 @@
 <div class="container">
     <div class="gradient-2 p-3 mt-4 mb-3">
         <div class="row mt-3 mb-3">
-            <div class="col-6">
+            <div class="col-md-6 col-sm-12">
                 {% if team.team_image %}
-                    <img class="team-image" style="height:200px;width:200px;border-radius:50%;margin: 0 auto;display: block;border: 5px solid #040612;box-shadow: 0 0 20px #003366;" src="{{ team.team_image.url }}" alt="{{ team.team_name }}">
+                <img class="team-image img-fluid mx-auto d-block"
+                     style="height:150px;width:150px;border-radius:50%;margin: 0 auto;display: block;border: 5px solid #040612;box-shadow: 0 0 20px #003366;"
+                     src="{{ team.team_image.url }}" alt="{{ team.team_name }}">
                 {% else %}
-                    <img class="team-image" style="height:200px;width:200px;border-radius:50%;margin: 0 auto;display: block;border: 5px solid #040612;box-shadow: 0 0 20px #003366;"  src="{% static 'ratbot/images/default_team_image.png' %}" alt="{{ team.team_name }}">
+                <img class="team-image img-fluid mx-auto d-block"
+                     style="height:150px;width:150px;border-radius:50%;margin: 0 auto;display: block;border: 5px solid #040612;box-shadow: 0 0 20px #003366;"
+                     src="{% static 'ratbot/images/default_team_image.png' %}" alt="{{ team.team_name }}">
                 {% endif %}
+                <div class="col-md-12 col-sm-12 text-center">
+                    <h4>{{team.team_name}} | {{team.team_tag}}</h4>
+                    <h5>Followers: {{stats.followers}}</h5>
+                    {% if stats.following %}
+                    <form method="POST" action="{% url 'unfollow_team' team.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Unfollow</button>
+                    </form>
+                    {% else %}
+                    <form method="POST" action="{% url 'follow_team' team.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Follow</button>
+                    </form>
+                    {% endif %}
+                </div>
             </div>
-            <div class="col-6">
+
+            <div class="col-md-6 col-sm-12 mt-4">
                 <div class="row">
                     <div class="col-6">
                         <p>Total kills: {{ stats.total_kills }}</p>
@@ -33,38 +53,9 @@
                 </div>
             </div>
         </div>
-
-        <div class="row">
-            <div class="col-6 text-center">
-                <h2>{{team.team_name}} | {{team.team_tag}}</h2>
-            </div>
-            <div class="col-6">
-                <div class="row">
-                    <div class="col-5">
-                        <h3>Followers: {{stats.followers}}</h3>
-                    </div>
-                    <div class="col-3">
-                        {% if stats.following %}
-                            <form method="POST" action="{% url 'unfollow_team' team.id %}">
-                              {% csrf_token %}
-                              <button type="submit" class="btn btn-primary">Unfollow</button>
-                            </form>
-                        {% else %}
-                            <form method="POST" action="{% url 'follow_team' team.id %}">
-                              {% csrf_token %}
-                              <button type="submit" class="btn btn-primary">Follow</button>
-                            </form>
-                        {% endif %}
-                    </div>
-                    <div class="col-3">
-
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
     <div class="gradient-2 p-3 mt-2">
-    <table id="team_detail" class="table table-striped display">
+        <table id="team_detail" class="table table-striped display">
             <thead class="gradient" style="color:white;">
             <tr>
                 <th scope="col" class="dt-center">Server</th>
@@ -91,9 +82,14 @@
     </div>
     {% block additional_scripts %}
     <script>
-    $(document).ready(function() {
-        $('#team_detail').DataTable();
-    });
+        $(document).ready(function () {
+            $('#team_detail').DataTable({
+                retrieve: true,
+                scrollX: true,
+                searching: true,
+                responsive: true
+            });
+        });
 
     </script>
     {% endblock %}

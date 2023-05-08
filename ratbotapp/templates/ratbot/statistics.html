@@ -47,25 +47,32 @@
 <div class="container mt-1 p-2">
     <div class="row mt-3">
         <div class="col-12">
-            <h5 class="top-3-teams gradient"><i class="fa-solid fa-caret-down" style="margin-right: 30px;"></i>TOP 3
-                Most Popular Teams<i class="fa-solid fa-caret-down" style="margin-left: 30px;"></i></h5>
+            <h5 class="top-3-teams gradient"><i class="fa-solid fa-caret-down" style="margin-right: 30px;"></i>Most
+                Popular Teams<i class="fa-solid fa-caret-down" style="margin-left: 30px;"></i></h5>
         </div>
     </div>
-     {% for team in popular_teams|slice:"0:3" %}
+    {% for team in popular_teams|slice:"0:3" %}
     <div class="row mt-1 mx-4">
-        <div class="col-12" style="color: {% if forloop.counter == 1 %}#D4AF36{% elif forloop.counter == 2 %}#C0C0C0{% else %}#CD7F32{% endif %}">
+        <div class="col-12"
+             style="color: {% if forloop.counter == 1 %}#D4AF36{% elif forloop.counter == 2 %}#C0C0C0{% else %}#CD7F32{% endif %}">
             <div class="row py-2 border-bottom">
                 <div class="col-1">
                     <h6>{{ forloop.counter }}.</h6>
                 </div>
-                <div class="col-6">
-                    <h6>{{ team.team.team_name }} ({{ team.team.team_tag }})</h6>
-                </div>
-                <div class="col-3 text-center">
-                    <p>Followers: {{ team.followers }}</p>
-                </div>
-                <div class="col-2">
-                    <a href="{% url 'team_detail' team.team.pk %}" class="btn btn-sm btn-primary" style="width: 100%">See Details</a>
+                <div class="col-11">
+                    <div class="row">
+                        <div class="col-md-5 col-sm-12 text-center">
+                            <h6>{{ team.team.team_name }} ({{ team.team.team_tag }})</h6>
+                        </div>
+                        <div class="col-md-3 col-sm-12 text-center">
+                            <p>Followers: {{ team.followers }}</p>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <a href="{% url 'team_detail' team.team.pk %}" class="btn btn-sm btn-primary"
+                               style="width: 100%">See
+                                Details</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -73,23 +80,31 @@
     {% endfor %}
     {% for team in popular_teams|slice:"3:10" %}
     <div class="row mt-1 mx-4">
-        <div class="col-12">
+        <div class="col-12"
+             style="color: #FFF;">
             <div class="row py-2 border-bottom">
                 <div class="col-1">
                     <h6>{{ forloop.counter0|add:4 }}.</h6>
                 </div>
-                <div class="col-6">
-                    <h6>{{ team.team.team_name }} ({{ team.team.team_tag }})</h6>
-                </div>
-                <div class="col-3 text-center">
-                    <p>Followers: {{ team.followers }}</p>
-                </div>
-                <div class="col-2">
-                    <a href="{% url 'team_detail' team.team.pk %}" class="btn btn-sm btn-primary" style="width: 100%">See
-                        Details</a>
+                <div class="col-11">
+                    <div class="row">
+                        <div class="col-md-5 col-sm-12 text-center">
+                            <h6>{{ team.team.team_name }} ({{ team.team.team_tag }})</h6>
+
+                        </div>
+                        <div class="col-md-3 col-sm-12 text-center">
+                            <p>Followers: {{ team.followers }}</p>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <a href="{% url 'team_detail' team.team.pk %}" class="btn btn-sm btn-primary"
+                               style="width: 100%">See
+                                Details</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+
     </div>
     {% endfor %}
 </div>
