@@ -27,7 +27,7 @@ ALLOWED_HOSTS = [
     # "*",
     'rat-bot.up.railway.app',
     '127.0.0.1',
-    'rat-bot.com'
+    'www.rat-bot.com'
 ]
 
 AUTHENTICATION_BACKENDS = [
