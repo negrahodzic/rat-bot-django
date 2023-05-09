@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-%-9c(thmw8+-eez=l)z9hp3#_njdhj#s$fm)o4gnzfa14xykbg
 DEBUG = True
 ALLOWED_HOSTS = [
     # "*",
-    'rat-bot.up.railway.app',
+    # 'rat-bot.up.railway.app',
     '127.0.0.1',
     'www.rat-bot.com'
 ]
@@ -53,7 +53,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework.authtoken',
-
 ]
 
 MIDDLEWARE = [
@@ -66,7 +65,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CSRF_TRUSTED_ORIGINS = ['https://rat-bot.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://www.rat-bot.com']
 
 ROOT_URLCONF = 'ratbotwebsite.urls'
 
