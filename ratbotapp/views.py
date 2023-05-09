@@ -122,7 +122,7 @@ def login_btn(request: HttpRequest):
     # return redirect("/api/oauth2/login")
     return redirect("/accounts/discord/login")
 
-
+from django.db.models import Q
 @csrf_exempt
 @login_required(login_url="/accounts/discord/login")
 def teams(request):
@@ -130,34 +130,35 @@ def teams(request):
     page_number = request.GET.get('page', 1)
     sort_by = request.GET.get('sort_by', 'team_name')
 
-    data = Team.objects.filter(team_name__icontains=search_query).order_by(sort_by) | \
-           Team.objects.filter(team_tag__icontains=search_query).order_by(sort_by)
+    # Use the Q object to perform an OR query on team_name and team_tag
+    data = Team.objects.filter(Q(team_name__icontains=search_query) | Q(team_tag__icontains=search_query))
 
     if sort_by == 'followers':
         data = sorted(data, key=lambda team: len(get_team_followers(team)), reverse=True)
+    else:
+        data = data.order_by(sort_by)
+
+    paginator = Paginator(data, 6)
 
     try:
-        paginator = Paginator(data, 6)
-
         teams_page = paginator.page(page_number)
-
-        teams_with_followers = {}
-
-        counter = 0
-        for team in teams_page:
-            followers = get_team_followers(team)
-
-            teams_with_followers[counter] = {
-                "team": team,
-                "followers": len(followers)
-            }
-
-            counter += 1
-
     except PageNotAnInteger:
         teams_page = paginator.page(1)
-    except: # Za svaki slucaj, dodaj posle jos mogucih izuzetaka
+    except:  # Add more specific exceptions later
         teams_page = paginator.page(1)
+
+    teams_with_followers = {}
+
+    counter = 0
+    for team in teams_page:
+        followers = get_team_followers(team)
+
+        teams_with_followers[counter] = {
+            "team": team,
+            "followers": len(followers)
+        }
+
+        counter += 1
 
     return render(request, 'ratbot/teams.html', {
         'teams': teams_with_followers,
@@ -165,6 +166,7 @@ def teams(request):
         'search_query': search_query,
         'sort_by': sort_by
     })
+
 
 
 def get_team_followers(team):
