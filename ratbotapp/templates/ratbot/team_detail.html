@@ -70,7 +70,7 @@
             {% for score in scores %}
             <tr>
                 <td class="dt-center" style="color:white;">{{ score.result.server.guild_name}}</td>
-                <td class="dt-center" style="color:white;">{{ score.result.scrim_name}}</td>
+                <td class="dt-center" style="color:white;"><a href="{% url 'scrim_detail' score.result.pk %}">{{ score.result.scrim_name}}</a></td>
                 <td class="dt-center" style="color:white;">{{ score.rank }}</td>
                 <td class="dt-center" style="color:white;">{{ score.pp }}</td>
                 <td class="dt-center" style="color:white;">{{ score.kp }}</td>

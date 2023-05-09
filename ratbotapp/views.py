@@ -138,7 +138,7 @@ def teams(request):
     else:
         data = data.order_by(sort_by)
 
-    paginator = Paginator(data, 6)
+    paginator = Paginator(data, 9)
 
     try:
         teams_page = paginator.page(page_number)

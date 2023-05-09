@@ -20,7 +20,7 @@ team_detail = TeamViewSet.as_view({'get': 'retrieve'})
 
 urlpatterns = [
     path('', views.index, name='home'),
-    path('api', views.api_info, name='api-info'),
+    # path('api', views.api_info, name='api-info'),
     path('teams', views.teams, name='teams'),
     path('teams/<int:pk>', views.team_detail, name='team_detail'),
     path('teams/<int:team_id>/follow/', views.follow_team, name='follow_team'),
@@ -28,8 +28,8 @@ urlpatterns = [
     path('scrims', views.scrims_page, name='scrims'),
     path('scrims/<int:pk>', views.scrim_detail, name='scrim_detail'),
     path('my_account/', views.my_account, name='my_account'),
-    path('my_account/generate_token/', views.generate_token, name='generate_token'),
-    path('my_account/delete_token/', views.delete_token, name='delete_token'),
+    # path('my_account/generate_token/', views.generate_token, name='generate_token'),
+    # path('my_account/delete_token/', views.delete_token, name='delete_token'),
     path('account/logout', allauth.account.views.logout, name='logout'),
     path('account/login', allauth.account.views.login, name='login'),
     path('oauth2', views.oauth2, name='oauth2'),
@@ -41,9 +41,9 @@ urlpatterns = [
     path('api/ratbot_results', views.ratbot_results_api, name='ratbot_results_api'),
     # path('api/results/', ResultViewSet.as_view({'get': 'list'}), name='result-list'),
     # path('api/results/<int:pk>/', ResultViewSet.as_view({'get': 'retrieve'}), name='result-detail'),
-    path('api/teams/', TeamViewSet.as_view({'get': 'list'}), name='team-list'),
-    path('api/teams/<int:pk>/', TeamViewSet.as_view({'get': 'retrieve'}), name='team-detail'),
-    path('api/codashop/', CodashopView.as_view(), name='codashop'),
+    # path('api/teams/', TeamViewSet.as_view({'get': 'list'}), name='team-list'),
+    # path('api/teams/<int:pk>/', TeamViewSet.as_view({'get': 'retrieve'}), name='team-detail'),
+    # path('api/codashop/', CodashopView.as_view(), name='codashop'),
     # re_path(r'^.*$', RedirectView.as_view(url='/')),
 
 ]

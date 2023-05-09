@@ -36,11 +36,13 @@
         </div>
     </div>
     <div class="gradient-2 p-3 mt-2">
-        <table id="results_detail" class="table table-striped display">
+        <table id="results_detail" class="table table-striped display" style="width:100%">
             <thead class="gradient" style="color:white;">
             <tr>
                 <th scope="col" class="dt-center">Rank</th>
                 <th scope="col" class="dt-center">Team name</th>
+                <th scope="col" class="dt-center">Placement Points</th>
+                <th scope="col" class="dt-center">Kill Points</th>
                 <th scope="col" class="dt-center">Total points</th>
             </tr>
             </thead>
@@ -48,7 +50,9 @@
             {% for score in scores %}
             <tr>
                 <th scope="row" class="dt-center" style="color:white;">{{ score.rank }}</th>
-                <td class="dt-center" style="color:white;">{{ score.team.team_name }}</td>
+                <td class="dt-center" style="color:white;"><a href="{% url 'team_detail' score.team.pk %}">{{ score.team.team_name }}</a></td>
+                <td class="dt-center" style="color:white;">{{ score.pp }}</td>
+                <td class="dt-center" style="color:white;">{{ score.kp }}</td>
                 <td class="dt-center" style="color:white;">{{ score.tp }}</td>
             </tr>
             {% endfor %}
@@ -58,7 +62,12 @@
     {% block additional_scripts %}
     <script>
         $(document).ready(function () {
-            $('#results_detail').DataTable();
+            $('#results_detail').DataTable({
+                retrieve: true,
+                scrollX: true,
+                searching: true,
+                responsive: true
+            });
         });
 
     </script>

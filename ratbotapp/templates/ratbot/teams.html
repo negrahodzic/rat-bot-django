@@ -7,69 +7,56 @@
 
 {% block body %}
 <style>
-    .team-card-container {
-        height: 270px;
-        display: flex;
-        align-items: center;
+
+    .card {
+      background-color: #252525;
+      border: none;
+      border-radius: 10px;
+      color: #ffffff;
+      overflow: hidden;
+      min-height:300px;
+      margin: 10px;
     }
-    .team-card {
-        padding: 1rem;
-        margin-bottom: 1rem;
-        color: white;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        background-color: #000000;
-        background-image: radial-gradient(circle, #051930 0%, #000000 100%);
-        background-image: linear-gradient(to top, #051930 0%, #000000 100%);
-        box-shadow: 0 0 10px #656b6f;
-        border-radius: 10px;
-        min-height: 100%;
-        max-height: 100%;
-        width: 100%;
-    }
-    .team-image-container {
-        display: flex;
-        align-items: center;
-        margin-left: 1rem;
-        justify-content: center;
-    }
+
     .team-card a {
         color: white;
     }
 
-    .team-image {
-        height: 5rem;
-        width: 5rem;
-        border-radius: 50%;
-        margin: 0 auto;
-        display: block;
-        border: 1px solid #040612;
-        box-shadow: 0 0 10px #003366;
+    .button-1 {
+        color: white !important;
+        background-color: #04172b;
+        border: 1px solid #b5c9c9;
+        border-radius: 5px;
+        box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+        text-decoration: none;
     }
 
-    .team-info {
-        margin-left: 1rem;
+    .button-1:hover {
+        background-color: #55727e;
+        border: 1px solid #b5c9c9;
     }
 
-    .team-detail {
-        margin-bottom: 0.2rem;
+    .img-top {
+      height: 100px;
+      object-fit: cover;
+        background-color: #000000;
+      background-image: radial-gradient(circle, #051930 0%, #999c9b 100%);
+      background-image: linear-gradient(to top, #999c9b 0%, #051930 100%);
     }
 
-    .team-name {
-        font-size: 1.2rem;
-        color: #0D6EFD;
-        box-shadow: none;
-        border: none;
+    .team-title {
+        font-size: 1.3rem;
+        color: #1E75F2;
+            border: 3px solid #040612;
+    box-shadow: 0 0 20px #003366;
     }
 
-    .team-detail-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+    .team-tag {
+      font-size: 0.9rem;
     }
+
+
+
 </style>
 
 <div class="container pl-2">
@@ -91,42 +78,31 @@
 
     <div class="row mt-4" style="padding-left: 20px;">
         {% for index, team_data in teams.items %}
-        <div class="col-sm-12 col-md-6 col-lg-4 mb-3 mt-3">
-            <div class="team-card-container">
-                <div class="team-card row">
-                    <div class="col-12">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="team-image-container">
-                                    {% if team_data.team.team_image %}
-                                    <img class="team-image" src="{{ team_data.team.team_image.url }}"
+        <div class="col-sm-12 col-md-6 col-lg-4 mb-1 mt-1">
+            <div class="card gradient-2">
+                {% if team_data.team.team_image %}
+                        <img class="img-top" src="{{ team_data.team.team_image.url }}"
                                          alt="{{ team_data.team.team_name }}">
-                                    {% else %}
-                                    <img class="team-image" src="{% static 'ratbot/images/default_team_image.png' %}"
+                {% else %}
+                        <img class="img-top" src="{% static 'ratbot/images/default_team_image.png' %}"
                                          alt="{{ team_data.team.team_name }}">
-                                    {% endif %}
-                                </div>
-                                <div class="team-info">
-                                    <h5 class="team-name">{{ team_data.team.team_name }}</h5>
-                                    <div class="team-detail-container">
-                                        <p class="team-detail">Team tag: {{ team_data.team.team_tag }}</p>
-                                        <p class="team-detail">Followers: <span class="badge bg-secondary">{{ team_data.followers }}</span></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <a href="{% url 'team_detail' team_data.team.pk %}" class="btn btn-sm btn-primary mt-2" style="width: 100%">See Details</a>
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="team-title text-center">{{ team_data.team.team_name }}</h5>
+                    <p class="team-tag text-center">Team tag: <small>{{ team_data.team.team_tag }}</small></p>
+                    <p class="text-center">Followers: <span class="badge bg-secondary"> {{ team_data.followers }} </span></p>
+                    <div class="mt-1 mb-1 text-center">
+                        <a href="{% url 'team_detail' team_data.team.pk %}" class="btn btn-sm button-1 mt-2" style="width: 100%">See Details</a>
                     </div>
                 </div>
             </div>
         </div>
         {% empty %}
-        <div class="col-12">
-            <p>No teams found</p>
-        </div>
+            <div class="col-12">
+                <p>No teams found</p>
+            </div>
         {% endfor %}
+
     </div>
     <div class="row mt-3" style="padding-left: 30px;">
         <div class="col-12 d-flex justify-content-center">
